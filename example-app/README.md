@@ -62,8 +62,19 @@ Features demonstrated:
 - Type-safe RPC calls
 
 ### Multi-Protocol (Phase 2)
+
+**Development Mode** (auto-generates protos at runtime):
 ```bash
 npm run example:multi
+```
+
+**Production Mode** (uses pre-compiled protos for zero overhead):
+```bash
+# 1. Build proto files (run once or in CI/CD)
+npm run build:protos
+
+# 2. Run in production mode
+npm run example:multi:prod
 ```
 
 Features demonstrated:
@@ -71,6 +82,48 @@ Features demonstrated:
 - REST + GraphQL + gRPC from one handler
 - Protocol negotiation
 - Shared business logic
+- Hybrid approach: automatic in dev, zero-overhead in production
+
+## Production Deployment
+
+### Building for Production
+
+BlitzAPI uses a hybrid approach for gRPC proto files:
+
+1. **Build TypeScript and compile proto files:**
+```bash
+npm run build:protos
+```
+
+This will:
+- Compile TypeScript to `dist/`
+- Generate proto files from your Zod schemas
+- Pre-compile protos to `.blitzapi/protos/*.compiled.json`
+
+2. **Deploy with NODE_ENV=production:**
+```bash
+NODE_ENV=production node dist/your-server.js
+```
+
+In production mode:
+- ⚡ **Zero overhead** - Pre-compiled protos load instantly
+- 🚀 **Maximum performance** - No runtime proto generation
+- 📦 **Portable** - Compiled protos work anywhere
+
+### CI/CD Pipeline Example
+
+```yaml
+# .github/workflows/deploy.yml
+- name: Build application
+  run: npm run build:protos
+
+- name: Deploy to production
+  env:
+    NODE_ENV: production
+  run: npm start
+```
+
+**Note:** The `.blitzapi/` directory is gitignored but should be included in your deployment artifacts.
 
 ## Testing
 
