@@ -1,5 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { ZodSchema, z } from 'zod';
+import type { TraceContext, ObservabilityConfig } from '../observability/types.js';
+import type { Span } from '@opentelemetry/api';
 
 /**
  * HTTP Methods supported by BlitzAPI
@@ -33,6 +35,15 @@ export interface Context<TBody = unknown, TQuery = unknown, TParams = unknown> {
 
   // User/auth context (populated by auth middleware)
   user?: unknown;
+
+  // Trace context (Phase 3.0 - Observability)
+  trace?: TraceContext;
+
+  // Trace helpers (Phase 3.0)
+  startSpan?: (name: string, attributes?: Record<string, any>) => Span | undefined;
+  endSpan?: (span: Span | undefined, error?: Error) => void;
+  addEvent?: (name: string, attributes?: Record<string, any>) => void;
+  setAttributes?: (attributes: Record<string, any>) => void;
 }
 
 /**
@@ -90,6 +101,7 @@ export interface ServerConfig {
   middleware?: Middleware[];
   onError?: ErrorHandler;
   onNotFound?: Handler;
+  observability?: ObservabilityConfig; // Phase 3.0
 }
 
 /**

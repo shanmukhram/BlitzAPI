@@ -4,6 +4,10 @@ import { Router } from './router.js';
 import { createContext, parseBody } from './context.js';
 import { HTTPError } from './types.js';
 import { ProtocolManager, type ProtocolManagerConfig } from '../protocols/manager.js';
+import { initializeTracing, shutdownTracing } from '../observability/tracer.js';
+import { initializeLogger } from '../observability/logger.js';
+import { initializeMetrics } from '../observability/metrics.js';
+import { traceMiddleware } from '../observability/middleware.js';
 
 /**
  * BlitzAPI Server - The core HTTP server
@@ -22,6 +26,16 @@ export class Server {
       ...config,
     };
     this.router = new Router();
+
+    // Initialize observability (Phase 3.0)
+    if (config.observability?.tracing?.enabled !== false) {
+      initializeTracing(config.observability);
+      initializeLogger(config.observability?.logging);
+      initializeMetrics(config.observability?.metrics);
+
+      // Auto-inject trace middleware as first middleware
+      this.router.use(traceMiddleware());
+    }
 
     // Apply global middleware
     if (this.config.middleware) {
@@ -200,6 +214,9 @@ export class Server {
     if (this.protocolManager) {
       await this.protocolManager.stopGRPC();
     }
+
+    // Shutdown observability (Phase 3.0)
+    await shutdownTracing();
 
     if (!this.httpServer) {
       return;

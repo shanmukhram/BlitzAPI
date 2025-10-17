@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { Context, HTTPMethod } from './types.js';
 import { parseURL, parseQuery } from '../utils/url.js';
+import { startSpan as _startSpan, endSpan as _endSpan, addEvent, setAttributes } from '../observability/context.js';
 
 /**
  * Creates a context object for request handling
@@ -71,6 +72,23 @@ export function createContext(
     setHeader(key: string, value: string) {
       res.setHeader(key, value);
       return ctx;
+    },
+
+    // Trace helpers (Phase 3.0 - Observability)
+    startSpan(name: string, attributes?: Record<string, any>) {
+      return _startSpan(name, attributes);
+    },
+
+    endSpan(span, error?: Error) {
+      if (span) _endSpan(span, error);
+    },
+
+    addEvent(name: string, attributes?: Record<string, any>) {
+      addEvent(name, attributes);
+    },
+
+    setAttributes(attributes: Record<string, any>) {
+      setAttributes(attributes);
     },
   };
 
