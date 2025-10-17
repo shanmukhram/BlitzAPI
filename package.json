@@ -41,6 +41,9 @@
     "example:multi:prod": "NODE_ENV=production npm run example:multi",
     "example:observability": "tsx example-app/observability/server.ts",
     "example:observability:prod": "NODE_ENV=production npm run example:observability",
+    "example:profiling": "tsx example-app/profiling/server.ts",
+    "example:profiling:prod": "NODE_ENV=production npm run example:profiling",
+    "example:profiling:multi": "tsx example-app/profiling/multi-protocol.ts",
     "example": "npm run example:rest"
   },
   "keywords": [

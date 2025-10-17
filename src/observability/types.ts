@@ -82,6 +82,19 @@ export interface MetricsEndpointConfig {
 }
 
 /**
+ * Profiling configuration (Phase 3.1)
+ */
+export interface ProfilingConfig {
+  enabled: boolean;
+  captureMemory?: boolean;      // Enable memory profiling (adds overhead)
+  bufferSize?: number;          // Number of profiles to keep in memory (default: 100)
+  slowThreshold?: number;       // ms - what's considered "slow" (default: 1000)
+  enableBudgets?: boolean;      // Enable performance budgets
+  autoDetectBottlenecks?: boolean;  // Automatic bottleneck detection
+  captureStacks?: boolean;      // Capture stack traces for slow operations
+}
+
+/**
  * Observability configuration
  */
 export interface ObservabilityConfig {
@@ -91,6 +104,7 @@ export interface ObservabilityConfig {
   metrics?: MetricsConfig;
   health?: HealthConfig;
   metricsEndpoint?: MetricsEndpointConfig;
+  profiling?: ProfilingConfig;  // Phase 3.1: Performance profiling
 }
 
 /**

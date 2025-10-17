@@ -8,6 +8,7 @@ import { initializeTracing, shutdownTracing } from '../observability/tracer.js';
 import { initializeLogger } from '../observability/logger.js';
 import { initializeMetrics } from '../observability/metrics.js';
 import { traceMiddleware } from '../observability/middleware.js';
+import { initializeProfiling, profilingMiddleware } from '../observability/profiler/index.js';
 
 /**
  * BlitzAPI Server - The core HTTP server
@@ -35,6 +36,13 @@ export class Server {
 
       // Auto-inject trace middleware as first middleware
       this.router.use(traceMiddleware());
+
+      // Initialize profiling (Phase 3.1)
+      if (config.observability?.profiling?.enabled) {
+        initializeProfiling(config.observability.profiling);
+        // Profiling middleware runs after tracing
+        this.router.use(profilingMiddleware());
+      }
     }
 
     // Apply global middleware
