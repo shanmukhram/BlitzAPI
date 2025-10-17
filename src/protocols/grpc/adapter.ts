@@ -13,6 +13,8 @@ import type { ProtocolAdapter, Operation } from '../types.js';
 import type { GRPCConfig, GRPCService } from './types.js';
 import { buildProtoFile } from './proto-builder.js';
 import { loadProtoRuntime } from './proto-loader-runtime.js';
+import { loadCompiledProto, generateAndCompileProto } from './proto-loader-build.js';
+import { join } from 'path';
 
 /**
  * gRPC adapter
@@ -108,24 +110,20 @@ export class GRPCAdapter implements ProtocolAdapter {
 
       // HYBRID APPROACH: Choose proto loading strategy based on environment
       let serviceDefinition: ServiceDefinition;
+      const packageName = service.package || 'blitzapi';
 
       if (isDevelopment) {
-        // DEV MODE: Runtime proto loading (slower, but automatic)
+        // DEV MODE: Runtime proto loading (automatic, convenient for development)
         console.log(`🔧 gRPC [DEV]: Loading proto for ${service.name} at runtime...`);
-        const packageName = service.package || 'blitzapi';
         serviceDefinition = await loadProtoRuntime(
           packageName,
           service.name,
           this.operations.filter(op => op.grpc?.service === service.name)
         );
       } else {
-        // PRODUCTION MODE: Load pre-compiled protos (fast)
-        // This would load from dist/protos/ after npm run build
-        throw new Error(
-          'Production mode proto loading not yet implemented. ' +
-          'For now, gRPC works in development mode only. ' +
-          'Production compilation coming in next update.'
-        );
+        // PRODUCTION MODE: Load pre-compiled protos (zero-overhead, instant loading)
+        console.log(`⚡ gRPC [PROD]: Loading pre-compiled proto for ${service.name}...`);
+        serviceDefinition = loadCompiledProto(packageName, service.name);
       }
 
       // Add service with real definition
@@ -170,6 +168,37 @@ export class GRPCAdapter implements ProtocolAdapter {
    */
   getProtoFile(packageName: string, serviceName: string): string {
     return buildProtoFile(packageName, serviceName, this.operations);
+  }
+
+  /**
+   * Compile all registered services for production (build-time)
+   * This should be called during npm run build:protos
+   */
+  async compileForProduction(
+    outputDir: string = join(process.cwd(), '.blitzapi', 'protos')
+  ): Promise<void> {
+    console.log('');
+    console.log('🔨 Building gRPC proto files for production...');
+    console.log('='.repeat(60));
+
+    for (const [, service] of this.services) {
+      if (service.methods.size === 0) continue;
+
+      const packageName = service.package || 'blitzapi';
+      const serviceOps = this.operations.filter(op => op.grpc?.service === service.name);
+
+      await generateAndCompileProto(
+        packageName,
+        service.name,
+        serviceOps,
+        outputDir
+      );
+    }
+
+    console.log('='.repeat(60));
+    console.log('✅ Production proto compilation complete!');
+    console.log(`   Output: ${outputDir}`);
+    console.log('');
   }
 }
 

@@ -30,6 +30,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc && tsc-alias",
+    "build:protos": "npm run build && tsx example-app/multi-protocol/build-protos.ts",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "type-check": "tsc --noEmit",
@@ -37,6 +38,7 @@
     "example:graphql": "tsx example-app/graphql/server.ts",
     "example:grpc": "tsx example-app/grpc/server.ts",
     "example:multi": "tsx example-app/multi-protocol/server.ts",
+    "example:multi:prod": "NODE_ENV=production npm run example:multi",
     "example": "npm run example:rest"
   },
   "keywords": [

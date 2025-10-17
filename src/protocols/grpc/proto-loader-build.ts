@@ -1,21 +1,38 @@
 /**
  * Build-time proto compiler for production mode
- * Pre-compiles proto files during npm run build
+ * Pre-compiles proto files during build for zero-overhead runtime
  */
 
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'fs';
+import { writeFileSync, mkdirSync, existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
+import type { Operation } from '../types.js';
 
 /**
- * Compile proto file at build time and save to cache
+ * Generate and compile proto files at build time
+ * This creates both the .proto file and the compiled JSON
  */
-export async function compileProtoAtBuildTime(
-  protoPath: string,
+export async function generateAndCompileProto(
+  packageName: string,
+  serviceName: string,
+  operations: Operation[],
   outputDir: string
-): Promise<void> {
-  // Load proto file
+): Promise<string> {
+  // 1. Generate proto file content (same as runtime)
+  const protoContent = buildProtoFile(packageName, serviceName, operations);
+
+  // 2. Ensure output directory exists
+  if (!existsSync(outputDir)) {
+    mkdirSync(outputDir, { recursive: true });
+  }
+
+  // 3. Write proto file
+  const protoPath = join(outputDir, `${serviceName}.proto`);
+  writeFileSync(protoPath, protoContent);
+  console.log(`📝 Generated proto file: ${protoPath}`);
+
+  // 4. Load and compile proto file
   const packageDefinition = await protoLoader.load(protoPath, {
     keepCase: true,
     longs: String,
@@ -24,31 +41,138 @@ export async function compileProtoAtBuildTime(
     oneofs: true,
   });
 
-  // Save compiled definition
-  if (!existsSync(outputDir)) {
-    mkdirSync(outputDir, { recursive: true });
+  // 5. Save compiled definition as JSON for fast loading
+  const compiledPath = join(outputDir, `${serviceName}.compiled.json`);
+  writeFileSync(compiledPath, JSON.stringify(packageDefinition, null, 2));
+  console.log(`✅ Compiled proto: ${compiledPath}`);
+
+  return compiledPath;
+}
+
+/**
+ * Build proto file content from operations
+ * (Duplicate from proto-loader-runtime.ts for build independence)
+ */
+function buildProtoFile(
+  packageName: string,
+  serviceName: string,
+  operations: Operation[]
+): string {
+  const messages: string[] = [];
+  const serviceMethods: string[] = [];
+
+  for (const op of operations) {
+    if (!op.grpc) continue;
+
+    // Generate input message
+    let inputMessage = 'google.protobuf.Empty';
+    if (op.input) {
+      const inputTypeName = `${capitalize(op.name)}Request`;
+      messages.push(zodToProtoMessage(inputTypeName, op.input));
+      inputMessage = inputTypeName;
+    }
+
+    // Generate output message
+    let outputMessage = 'google.protobuf.Empty';
+    if (op.output) {
+      const outputTypeName = `${capitalize(op.name)}Response`;
+      messages.push(zodToProtoMessage(outputTypeName, op.output));
+      outputMessage = outputTypeName;
+    }
+
+    // Add service method
+    serviceMethods.push(
+      `  rpc ${op.grpc.method}(${inputMessage}) returns (${outputMessage});`
+    );
   }
 
-  const outputPath = join(outputDir, 'compiled-protos.json');
-  writeFileSync(outputPath, JSON.stringify(packageDefinition, null, 2));
+  return `syntax = "proto3";
 
-  console.log(`✅ Compiled proto: ${protoPath} → ${outputPath}`);
+package ${packageName};
+
+import "google/protobuf/empty.proto";
+
+${messages.join('\n\n')}
+
+service ${serviceName} {
+${serviceMethods.join('\n')}
+}
+`;
+}
+
+/**
+ * Convert Zod schema to proto message definition
+ */
+function zodToProtoMessage(name: string, schema: any): string {
+  const def = schema._def;
+
+  if (def.typeName !== 'ZodObject') {
+    return `message ${name} {\n  string value = 1;\n}`;
+  }
+
+  const shape = def.shape();
+  const fields: string[] = [];
+  let fieldNumber = 1;
+
+  for (const [key, value] of Object.entries(shape)) {
+    const protoType = zodToProtoType(value as any);
+    fields.push(`  ${protoType} ${key} = ${fieldNumber};`);
+    fieldNumber++;
+  }
+
+  return `message ${name} {\n${fields.join('\n')}\n}`;
+}
+
+/**
+ * Convert Zod type to proto type
+ */
+function zodToProtoType(zodSchema: any): string {
+  const def = zodSchema._def;
+  const typeName = def.typeName;
+
+  switch (typeName) {
+    case 'ZodString':
+      return 'string';
+    case 'ZodNumber':
+      return 'double';
+    case 'ZodBoolean':
+      return 'bool';
+    case 'ZodArray':
+      return `repeated ${zodToProtoType(def.type)}`;
+    case 'ZodOptional':
+      return zodToProtoType(def.innerType);
+    case 'ZodNullable':
+      return zodToProtoType(def.innerType);
+    case 'ZodDefault':
+      return zodToProtoType(def.innerType);
+    default:
+      return 'string';
+  }
+}
+
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 /**
  * Load pre-compiled proto definition (production mode)
+ * This is ultra-fast because it just reads JSON - no parsing needed
  */
 export function loadCompiledProto(
-  compiledPath: string,
   packageName: string,
-  serviceName: string
+  serviceName: string,
+  compiledDir: string = join(process.cwd(), '.blitzapi', 'protos')
 ): grpc.ServiceDefinition {
+  const compiledPath = join(compiledDir, `${serviceName}.compiled.json`);
+
   if (!existsSync(compiledPath)) {
     throw new Error(
-      `Compiled proto not found: ${compiledPath}. Run 'npm run build' first.`
+      `❌ Compiled proto not found: ${compiledPath}\n` +
+      `   Run 'npm run build:protos' first or set NODE_ENV=development for auto-generation.`
     );
   }
 
+  // Load pre-compiled package definition (instant!)
   const packageDefinition = JSON.parse(readFileSync(compiledPath, 'utf-8'));
   const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
 
@@ -62,5 +186,21 @@ export function loadCompiledProto(
     throw new Error(`Service ${serviceName} not found in package ${packageName}`);
   }
 
+  console.log(`⚡ Loaded pre-compiled proto: ${serviceName} (zero-overhead!)`);
   return serviceObj.service as grpc.ServiceDefinition;
+}
+
+/**
+ * Get list of all compiled proto services
+ */
+export function getCompiledServices(
+  compiledDir: string = join(process.cwd(), '.blitzapi', 'protos')
+): string[] {
+  if (!existsSync(compiledDir)) {
+    return [];
+  }
+
+  return readdirSync(compiledDir)
+    .filter(file => file.endsWith('.compiled.json'))
+    .map(file => file.replace('.compiled.json', ''));
 }
