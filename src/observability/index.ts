@@ -20,3 +20,6 @@ export * from './propagators/grpc.js';
 // Utilities
 export * from './utils/span-builder.js';
 export * from './utils/sanitizer.js';
+
+// Flow Visualization (Phase 3.6)
+export * from './flow/index.js';

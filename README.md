@@ -25,20 +25,22 @@ BlitzAPI solves these problems:
 - ✅ **Multi-Protocol** - REST, GraphQL, and gRPC from single handler
 - ✅ **Developer-friendly** - Intuitive API with excellent error messages
 
-## Current Status: Phase 3.4 Complete ✅
+## Current Status: Phase 3.6 Complete ✅
 
-### ⚡ **Phase 3.4: Smart Adapter Selection** (Latest)
-- ✅ Intelligent HTTP backend selection (Node.js HTTP / uWebSockets)
-- ✅ Automatic 2-3x performance boost with uWebSockets when available
-- ✅ Graceful fallback to Node.js HTTP
-- ✅ Protocol-aware adapter selection (gRPC compatibility)
+### ⚡ **Phase 3.6: Request Flow Visualization** (Latest)
+- ✅ Visual request flow tracking with ASCII waterfall charts
+- ✅ Mermaid sequence diagram generation
+- ✅ Automatic dependency tracking (DB, HTTP, Cache)
+- ✅ Bottleneck detection and performance insights
+- ✅ Flow storage with circular buffer
+- ✅ REST API for flow retrieval and statistics
 
-### **Phase 3.0-3.3: Observability & Multi-Protocol**
+### **Phase 3.0-3.5: Observability & Performance**
 - ✅ OpenTelemetry distributed tracing across services
 - ✅ Performance profiling with request timeline visualization
-- ✅ Bottleneck detection and performance budgets
 - ✅ Multi-protocol support (REST + GraphQL + gRPC)
-- ✅ Adapter pattern for pluggable HTTP backends
+- ✅ Smart adapter selection (Node.js HTTP / uWebSockets)
+- ✅ Automatic 2-3x performance boost with uWebSockets when available
 
 ### **Phase 1-2: Foundation**
 - ✅ Core HTTP server with optimized routing (O(1) static routes)
@@ -340,6 +342,146 @@ const hash = await passwordService.hash('password123');
 const valid = await passwordService.verify('password123', hash);
 ```
 
+## Observability & Performance
+
+BlitzAPI provides production-ready observability features out of the box:
+
+### Distributed Tracing
+
+Track requests across your entire stack with OpenTelemetry:
+
+```typescript
+const app = createApp({
+  port: 3000,
+  observability: {
+    tracing: {
+      enabled: true,
+      exporter: 'console', // or 'jaeger', 'zipkin'
+      serviceName: 'my-api',
+      sampleRate: 1.0, // 100% sampling
+    },
+  },
+});
+```
+
+### Request Flow Visualization
+
+Visualize exactly how your requests flow through your application - see database queries, HTTP calls, cache operations, and identify bottlenecks instantly.
+
+<div align="center">
+  <img src="./docs/images/flow-visualization-diagram.png" alt="Request Flow Visualization" width="800">
+</div>
+
+**How it works:**
+
+The diagram above shows a complete request flow through BlitzAPI. Each operation is automatically tracked with precise timing:
+
+1. **Routing** (3.2ms) - Request routing and validation
+2. **Validation** (8.5ms) - Request validation middleware
+3. **Auth** (7.1ms) - Authentication middleware
+4. **Database Query** (35.4ms) - SQL query execution
+5. **External API** (32.1ms) - HTTP call to external service
+6. **Cache SET** (7.8ms) - Store result in cache
+7. **Response** - Total request time: 245.8ms
+
+```typescript
+import { flowTrackingMiddleware, trackDatabase, trackHTTP, trackCache } from 'blitzapi';
+
+// Enable flow tracking
+app.use(flowTrackingMiddleware());
+
+app.get('/users/:id', async (ctx) => {
+  // Track cache check
+  const cached = await trackCache(ctx, 'get', `user:${ctx.params.id}`, async () => {
+    return cache.get(`user:${ctx.params.id}`);
+  });
+
+  if (cached) return ctx.json(cached);
+
+  // Track database query
+  const user = await trackDatabase(
+    ctx,
+    'SELECT * FROM users WHERE id = ?',
+    async () => db.query('SELECT * FROM users WHERE id = ?', [ctx.params.id]),
+    { database: 'postgres' }
+  );
+
+  // Track external API call
+  const profile = await trackHTTP(
+    ctx,
+    'GET',
+    'https://api.example.com/profiles',
+    async () => fetch('https://api.example.com/profiles/' + user.id)
+  );
+
+  ctx.json({ ...user, profile });
+});
+```
+
+**View the flow visualization:**
+
+```bash
+# Get ASCII waterfall chart
+curl http://localhost:3000/profile/{traceId}/waterfall
+
+# Get Mermaid sequence diagram
+curl http://localhost:3000/profile/{traceId}/mermaid
+
+# Get raw JSON data
+curl http://localhost:3000/profile/{traceId}/flow
+```
+
+**Example ASCII waterfall output:**
+
+```
+Request Flow Timeline (145.32ms total)
+════════════════════════════════════════════════════════════════════════════════
+
+Request:      GET /users/123
+Trace ID:     a1b2c3d4e5f6...
+Duration:     145.32ms
+Status:       ✓ OK
+
+Timeline:
+0ms         36ms        73ms        109ms       145ms
+|-----------|-----------|-----------|-----------|
+⚡ Request Started                                    3.21ms
+💾 Cache: GET user:123                               5.43ms
+🗄️ DB: SELECT * FROM users WHERE id = ?             42.18ms  ⚠️
+🌐 HTTP: GET https://api.example.com/profiles        87.92ms  ⚠️
+⚡ Response Serialization                             2.11ms
+
+Dependencies:
+  🗄️ Database Queries: 1 (42.18ms total, 42.18ms avg)
+    • SELECT * FROM users WHERE id = ? (42.18ms)
+
+  🌐 HTTP Calls: 1 (87.92ms total, 87.92ms avg)
+    • GET https://api.example.com/profiles [200] (87.92ms)
+
+  💾 Cache Operations: 1 (5.43ms total, 5.43ms avg)
+    • GET user:123 (miss) (5.43ms)
+
+Performance Stats:
+  Routing:      3.21ms (2.2%)
+  Handler:      139.89ms (96.3%)
+  Response:     2.11ms (1.5%)
+
+⚠️ Bottlenecks Detected:
+  • DB: SELECT * FROM users WHERE id = ? (42.18ms)
+  • HTTP: GET https://api.example.com/profiles (87.92ms)
+```
+
+**API Endpoints:**
+
+- `GET /profile/:traceId/flow` - Get flow data as JSON
+- `GET /profile/:traceId/waterfall` - Get ASCII waterfall visualization
+- `GET /profile/:traceId/mermaid` - Get Mermaid sequence diagram
+- `GET /profile/:traceId?format=json|waterfall|mermaid` - Get flow in specified format
+- `GET /flow/stats` - Get statistics about all flows
+- `GET /flow/slow` - Get slowest requests
+
+For detailed documentation, see [FLOW_VISUALIZATION.md](./docs/FLOW_VISUALIZATION.md).
+
 ## Example Application
 
 A complete example application is available in [example-app/](./example-app/):
@@ -417,6 +559,8 @@ Test it:
 - ✅ Phase 3.2: Adapter pattern for HTTP backends
 - ✅ Phase 3.3: Multi-adapter support (Node.js + uWebSockets)
 - ✅ Phase 3.4: Smart adapter selection with automatic fallback
+- ✅ Phase 3.5: Performance budgets & bottleneck detection
+- ✅ Phase 3.6: Request flow visualization with dependency tracking
 
 ### Phase 4: Living Documentation (Next)
 - Auto-generate OpenAPI/GraphQL schemas
