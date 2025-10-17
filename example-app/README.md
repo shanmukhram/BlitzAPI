@@ -1,176 +1,97 @@
-# BlitzAPI Example Application
+# BlitzAPI Examples
 
-This is a complete example application demonstrating all Phase 1 features of BlitzAPI.
+This directory contains comprehensive examples demonstrating all features of BlitzAPI.
 
-## Features Demonstrated
-
-1. **Core HTTP Server** - Fast, lightweight server built on Node.js
-2. **Type-Safe Routing** - Define routes with full TypeScript support
-3. **Middleware System** - Composable middleware with proper flow control
-4. **Zod Validation** - Runtime validation with automatic TypeScript type inference
-5. **JWT Authentication** - Secure token-based authentication
-6. **Password Hashing** - bcrypt-based password security
-7. **Rate Limiting** - Prevent abuse with request rate limits
-8. **CORS** - Cross-Origin Resource Sharing support
-9. **Logging** - Request/response logging with timing
-
-## Running the Example
-
-### Prerequisites
-
-- Node.js 20+
-- npm or pnpm
-
-### Installation
-
-```bash
-# Install dependencies
-npm install
-
-# Run the example server
-npm run example
-```
-
-The server will start on `http://localhost:3000`.
-
-### Testing the API
-
-Make the test script executable and run it:
-
-```bash
-chmod +x example-app/test-api.sh
-./example-app/test-api.sh
-```
-
-Or test manually with curl:
-
-```bash
-# Health check
-curl http://localhost:3000/
-
-# Register a user
-curl -X POST http://localhost:3000/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "user@example.com",
-    "password": "password123",
-    "name": "John Doe"
-  }'
-
-# Login (returns JWT token)
-curl -X POST http://localhost:3000/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "user@example.com",
-    "password": "password123"
-  }'
-
-# Get profile (requires authentication)
-curl -X GET http://localhost:3000/auth/profile \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-
-# Create a todo (requires authentication)
-curl -X POST http://localhost:3000/todos \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Learn BlitzAPI"
-  }'
-
-# List todos (requires authentication)
-curl -X GET http://localhost:3000/todos \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-```
-
-## API Endpoints
-
-### Public Endpoints
-
-- `GET /` - Health check and API information
-
-### Authentication Endpoints
-
-- `POST /auth/register` - Register a new user
-- `POST /auth/login` - Login and receive JWT token
-- `GET /auth/profile` - Get current user profile (requires auth)
-
-### Todo Endpoints (All require authentication)
-
-- `GET /todos` - List all todos for current user
-- `POST /todos` - Create a new todo
-- `GET /todos/:id` - Get a specific todo
-- `PATCH /todos/:id` - Update a todo
-- `DELETE /todos/:id` - Delete a todo
-
-## Code Structure
+## Structure
 
 ```
 example-app/
-├── server.ts          # Main application file
-├── test-api.sh        # Shell script to test all endpoints
-└── README.md          # This file
+├── rest/              # REST API examples (Phase 1)
+│   ├── server.ts      # Todo API with authentication
+│   └── test-api.sh    # Test script
+├── graphql/           # GraphQL examples (Phase 2)
+│   ├── server.ts      # Library API with queries & mutations
+│   └── test.sh        # GraphQL test script
+├── grpc/              # gRPC examples (Phase 2)
+│   ├── server.ts      # gRPC service example
+│   ├── proto/         # Protocol buffer definitions
+│   └── test.sh        # gRPC test script
+└── multi-protocol/    # Multi-protocol examples
+    ├── server.ts      # Single API supporting REST, GraphQL, and gRPC
+    └── test.sh        # Comprehensive test script
 ```
 
-## Key Concepts
+## Running Examples
 
-### 1. Request Validation
-
-```typescript
-const createTodoSchema = z.object({
-  title: z.string().min(1).max(200),
-});
-
-app.post('/todos',
-  validate({ body: createTodoSchema }),
-  async (ctx) => {
-    // ctx.body is now typed and validated
-  }
-);
+### REST API (Phase 1)
+```bash
+npm run example:rest
 ```
 
-### 2. Middleware Composition
+Features demonstrated:
+- User registration & authentication
+- JWT tokens
+- Password hashing
+- Protected routes
+- CRUD operations
+- Request validation
+- Rate limiting
 
-```typescript
-app.group('/todos', (router) => {
-  // All routes in this group use these middleware
-  router.use(authenticate(jwtService));
-  router.use(rateLimit({ maxRequests: 10 }));
-
-  router.get('/', handler);
-  router.post('/', handler);
-});
+### GraphQL API (Phase 2)
+```bash
+npm run example:graphql
 ```
 
-### 3. Error Handling
+Features demonstrated:
+- GraphQL queries
+- GraphQL mutations
+- Automatic schema generation from Zod
+- GraphQL Playground
+- Type-safe operations
+- Shared data with REST
 
-```typescript
-throw new HTTPError(404, 'Todo not found');
-// Automatically returns: { "error": true, "message": "Todo not found" }
+### gRPC API (Phase 2)
+```bash
+npm run example:grpc
 ```
 
-### 4. Type Safety
+Features demonstrated:
+- gRPC service definitions
+- Protocol Buffers
+- Bidirectional streaming
+- Type-safe RPC calls
 
-```typescript
-// Zod schema infers TypeScript types
-type CreateTodoInput = z.infer<typeof createTodoSchema>;
-
-// Context is fully typed
-const { title } = ctx.body as CreateTodoInput;
+### Multi-Protocol (Phase 2)
+```bash
+npm run example:multi
 ```
 
-## Next Steps
+Features demonstrated:
+- Single codebase, multiple protocols
+- REST + GraphQL + gRPC from one handler
+- Protocol negotiation
+- Shared business logic
 
-- Explore the source code in `src/` to see how the framework works
-- Try adding new features (e.g., todo categories, user roles)
-- Replace in-memory storage with a real database
-- Add more middleware (compression, helmet, etc.)
+## Testing
 
-## Notes
+Each example includes a test script:
 
-⚠️ This is a demo application. Do NOT use in production without:
-- Changing the JWT secret
-- Adding a real database
-- Implementing proper error logging
-- Adding input sanitization
-- Setting up HTTPS
-- Using environment variables for configuration
+```bash
+# Test REST
+./example-app/rest/test-api.sh
+
+# Test GraphQL
+./example-app/graphql/test.sh
+
+# Test gRPC
+./example-app/grpc/test.sh
+
+# Test all protocols
+./example-app/multi-protocol/test.sh
+```
+
+## Learn More
+
+- [Main README](../README.md) - Framework documentation
+- [Phase 1 Guide](../PHASE1_COMPLETE.md) - REST API features
+- [Quick Reference](../QUICK_REFERENCE.md) - API reference

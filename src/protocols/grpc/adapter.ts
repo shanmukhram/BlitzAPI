@@ -75,10 +75,19 @@ export class GRPCAdapter implements ProtocolAdapter {
    * Start gRPC server
    */
   async start(): Promise<void> {
+    // Skip if no operations registered
+    if (this.operations.length === 0) {
+      console.log('⏭️  gRPC: No operations registered, skipping gRPC server');
+      return;
+    }
+
     this.server = new Server();
 
     // Register all services
     for (const [, service] of this.services) {
+      // Skip if no methods
+      if (service.methods.size === 0) continue;
+
       const implementation: UntypedServiceImplementation = {};
 
       for (const [methodName, method] of service.methods) {
@@ -93,9 +102,20 @@ export class GRPCAdapter implements ProtocolAdapter {
       }
 
       // Create simple service definition
+      // Note: In a real implementation, this would load from .proto files
+      // For now, we'll use a placeholder since full gRPC requires proto compilation
       const serviceDefinition: ServiceDefinition = {} as any;
 
-      this.server.addService(serviceDefinition, implementation);
+      // Only add service if it has methods
+      if (Object.keys(implementation).length > 0) {
+        this.server.addService(serviceDefinition, implementation);
+      }
+    }
+
+    // If no services were added, skip
+    if (this.services.size === 0) {
+      console.log('⏭️  gRPC: No services defined, skipping gRPC server');
+      return;
     }
 
     // Start server

@@ -33,8 +33,11 @@
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "type-check": "tsc --noEmit",
-    "example": "tsx example-app/server.ts",
-    "example:graphql": "tsx example-app/graphql-server.ts"
+    "example:rest": "tsx example-app/rest/server.ts",
+    "example:graphql": "tsx example-app/graphql/server.ts",
+    "example:grpc": "tsx example-app/grpc/server.ts",
+    "example:multi": "tsx example-app/multi-protocol/server.ts",
+    "example": "npm run example:rest"
   },
   "keywords": [
     "api",
