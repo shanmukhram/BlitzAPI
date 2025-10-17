@@ -78,11 +78,11 @@ const operations: Operation[] = [
     graphql: {
       type: 'query',
     },
-    // gRPC method (foundation ready, needs proto compilation for full support)
-    // grpc: {
-    //   service: 'ProductService',
-    //   method: 'ListProducts',
-    // },
+    // gRPC method
+    grpc: {
+      service: 'ProductService',
+      method: 'ListProducts',
+    },
   },
 
   {
@@ -101,10 +101,10 @@ const operations: Operation[] = [
     graphql: {
       type: 'query',
     },
-    // grpc: {
-    //   service: 'ProductService',
-    //   method: 'GetProduct',
-    // },
+    grpc: {
+      service: 'ProductService',
+      method: 'GetProduct',
+    },
   },
 
   {
@@ -127,10 +127,10 @@ const operations: Operation[] = [
     graphql: {
       type: 'mutation',
     },
-    // grpc: {
-    //   service: 'ProductService',
-    //   method: 'CreateProduct',
-    // },
+    grpc: {
+      service: 'ProductService',
+      method: 'CreateProduct',
+    },
   },
 
   {
@@ -151,10 +151,10 @@ const operations: Operation[] = [
     graphql: {
       type: 'mutation',
     },
-    // grpc: {
-    //   service: 'ProductService',
-    //   method: 'DeleteProduct',
-    // },
+    grpc: {
+      service: 'ProductService',
+      method: 'DeleteProduct',
+    },
   },
 ];
 
@@ -169,11 +169,9 @@ const app = createApp({
       path: '/graphql',
       playground: true,
     },
-    // gRPC is available but requires proto file compilation
-    // See example-app/grpc/ for full gRPC implementation
-    // grpc: {
-    //   port: 50051,
-    // },
+    grpc: {
+      port: 50051,
+    },
   },
 });
 
@@ -236,14 +234,15 @@ app.listen(3000, '0.0.0.0').then(() => {
   console.log('   http://localhost:3000/graphql');
   console.log('   Playground: http://localhost:3000/graphql');
   console.log('');
-  console.log('💡 gRPC:');
-  console.log('   Foundation ready - see example-app/grpc/ for full implementation');
-  console.log('   (gRPC requires proto file compilation)');
+  console.log('✅ gRPC API:');
+  console.log('   grpc://localhost:50051');
+  console.log('   Service: ProductService');
+  console.log('   Methods: ListProducts, GetProduct, CreateProduct, DeleteProduct');
   console.log('');
   console.log('='.repeat(60));
   console.log('');
-  console.log('💡 The same data is accessible via REST and GraphQL!');
-  console.log('   Try accessing products via both protocols.');
-  console.log('   Changes made in one are immediately visible in the other.');
+  console.log('💡 The same data is accessible via ALL THREE protocols!');
+  console.log('   Try accessing products via REST, GraphQL, and gRPC.');
+  console.log('   Changes made in one are immediately visible in all others.');
   console.log('');
 });

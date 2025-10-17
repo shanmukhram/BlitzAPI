@@ -12,6 +12,7 @@ import {
 import type { ProtocolAdapter, Operation } from '../types.js';
 import type { GRPCConfig, GRPCService } from './types.js';
 import { buildProtoFile } from './proto-builder.js';
+import { loadProtoRuntime } from './proto-loader-runtime.js';
 
 /**
  * gRPC adapter
@@ -72,7 +73,9 @@ export class GRPCAdapter implements ProtocolAdapter {
   }
 
   /**
-   * Start gRPC server
+   * Start gRPC server (Hybrid Approach)
+   * - Development: Runtime proto loading (convenient)
+   * - Production: Pre-compiled protos (fast)
    */
   async start(): Promise<void> {
     // Skip if no operations registered
@@ -82,6 +85,8 @@ export class GRPCAdapter implements ProtocolAdapter {
     }
 
     this.server = new Server();
+
+    const isDevelopment = process.env.NODE_ENV !== 'production';
 
     // Register all services
     for (const [, service] of this.services) {
@@ -101,21 +106,31 @@ export class GRPCAdapter implements ProtocolAdapter {
         };
       }
 
-      // Create simple service definition
-      // Note: In a real implementation, this would load from .proto files
-      // For now, we'll use a placeholder since full gRPC requires proto compilation
-      const serviceDefinition: ServiceDefinition = {} as any;
+      // HYBRID APPROACH: Choose proto loading strategy based on environment
+      let serviceDefinition: ServiceDefinition;
 
-      // Only add service if it has methods
-      if (Object.keys(implementation).length > 0) {
-        this.server.addService(serviceDefinition, implementation);
+      if (isDevelopment) {
+        // DEV MODE: Runtime proto loading (slower, but automatic)
+        console.log(`🔧 gRPC [DEV]: Loading proto for ${service.name} at runtime...`);
+        const packageName = service.package || 'blitzapi';
+        serviceDefinition = await loadProtoRuntime(
+          packageName,
+          service.name,
+          this.operations.filter(op => op.grpc?.service === service.name)
+        );
+      } else {
+        // PRODUCTION MODE: Load pre-compiled protos (fast)
+        // This would load from dist/protos/ after npm run build
+        throw new Error(
+          'Production mode proto loading not yet implemented. ' +
+          'For now, gRPC works in development mode only. ' +
+          'Production compilation coming in next update.'
+        );
       }
-    }
 
-    // If no services were added, skip
-    if (this.services.size === 0) {
-      console.log('⏭️  gRPC: No services defined, skipping gRPC server');
-      return;
+      // Add service with real definition
+      this.server.addService(serviceDefinition, implementation);
+      console.log(`✅ gRPC service registered: ${service.name}`);
     }
 
     // Start server
