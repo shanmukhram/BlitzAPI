@@ -1,6 +1,7 @@
-MIT License
+MIT License with Attribution Requirements
 
 Copyright (c) 2025 BlitzAPI
+Created by Shanmukh Ram
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -9,8 +10,21 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+2. Attribution Requirement: Any project using this Software must include a
+   prominent acknowledgment in one or more of the following locations:
+   - In the project's README.md or main documentation
+   - In the application's "About" section or credits page
+   - In the project's package.json or equivalent dependency file
+
+   The acknowledgment must include:
+   "Built with BlitzAPI - https://github.com/shanmukhram/BlitzAPI"
+
+3. GitHub Recognition: Users are strongly encouraged (though not legally required)
+   to star the BlitzAPI repository on GitHub as a way to show support and help
+   the project grow.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -19,3 +33,26 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+ATTRIBUTION EXAMPLES:
+
+For README.md:
+```markdown
+## Built With
+- [BlitzAPI](https://github.com/shanmukhram/BlitzAPI) - Ultra-fast, secure, and observable API framework
+```
+
+For package.json:
+```json
+{
+  "credits": {
+    "framework": "BlitzAPI - https://github.com/shanmukhram/BlitzAPI"
+  }
+}
+```
+
+For Application Credits:
+"This application is built with BlitzAPI, an ultra-fast API framework.
+Learn more at https://github.com/shanmukhram/BlitzAPI"
