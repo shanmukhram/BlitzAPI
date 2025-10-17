@@ -1,0 +1,145 @@
+BlitzAPI Project Structure
+==========================
+
+📦 BlitzAPI/
+│
+├── 📁 src/                          # Source code
+│   ├── 📁 core/                     # Core framework
+│   │   ├── types.ts                 # TypeScript definitions
+│   │   ├── context.ts               # Request context creation
+│   │   ├── router.ts                # Routing system
+│   │   └── server.ts                # HTTP server
+│   │
+│   ├── 📁 middleware/               # Built-in middleware
+│   │   ├── index.ts                 # Middleware exports
+│   │   ├── validation.ts            # Zod validation
+│   │   ├── cors.ts                  # CORS handling
+│   │   ├── logger.ts                # Request logging
+│   │   └── rate-limit.ts            # Rate limiting
+│   │
+│   ├── 📁 auth/                     # Authentication
+│   │   ├── index.ts                 # Auth exports
+│   │   ├── jwt.ts                   # JWT service
+│   │   └── password.ts              # Password hashing
+│   │
+│   ├── 📁 utils/                    # Utilities
+│   │   └── url.ts                   # URL parsing
+│   │
+│   └── index.ts                     # Main exports
+│
+├── 📁 example-app/                  # Example application
+│   ├── server.ts                    # Full example server
+│   ├── test-api.sh                  # API test script
+│   └── README.md                    # Example docs
+│
+├── 📁 dist/                         # Compiled JavaScript (generated)
+│
+├── 📄 Configuration Files
+│   ├── package.json                 # Dependencies & scripts
+│   ├── tsconfig.json                # TypeScript config
+│   ├── vitest.config.ts             # Test configuration
+│   ├── .gitignore                   # Git ignore rules
+│   └── .env.example                 # Environment template
+│
+├── 📄 Documentation
+│   ├── README.md                    # Main documentation
+│   ├── PHASE1_COMPLETE.md           # Phase 1 summary
+│   ├── QUICK_REFERENCE.md           # Quick reference
+│   ├── STRUCTURE.txt                # This file
+│   └── LICENSE                      # MIT License
+│
+└── 📁 node_modules/                 # Dependencies (not tracked)
+
+
+Key Files & Their Purpose
+==========================
+
+Core Framework (src/core/)
+--------------------------
+• types.ts (250 lines)
+  - TypeScript interfaces and types
+  - Context, Handler, Middleware, Route definitions
+  - HTTPError class
+
+• context.ts (100 lines)
+  - Creates context for each request
+  - Parses request body (JSON, URL-encoded)
+  - Response helpers (json, text, status, setHeader)
+
+• router.ts (200 lines)
+  - Route registration (GET, POST, PUT, etc.)
+  - Dynamic parameters (/users/:id)
+  - Route grouping and nesting
+  - Middleware composition
+
+• server.ts (150 lines)
+  - HTTP server creation
+  - Request handling pipeline
+  - Error handling
+  - Lifecycle management (listen, close)
+
+
+Middleware (src/middleware/)
+----------------------------
+• validation.ts (80 lines)
+  - Zod schema validation
+  - Body, query, params validation
+  - Type-safe error messages
+
+• cors.ts (70 lines)
+  - CORS header management
+  - Origin validation
+  - Preflight handling
+
+• logger.ts (30 lines)
+  - Request/response logging
+  - Timing information
+  - Color-coded status codes
+
+• rate-limit.ts (120 lines)
+  - In-memory rate limiting
+  - Configurable windows
+  - Rate limit headers
+  - Automatic cleanup
+
+
+Authentication (src/auth/)
+--------------------------
+• jwt.ts (130 lines)
+  - JWT token generation
+  - Token verification
+  - Auth middleware
+  - Optional auth support
+
+• password.ts (40 lines)
+  - bcrypt password hashing
+  - Password verification
+  - Rehash detection
+
+
+Example Application
+-------------------
+• example-app/server.ts (300 lines)
+  - Complete REST API example
+  - User registration & login
+  - Protected routes
+  - CRUD operations (Todos)
+  - Demonstrates all features
+
+
+Package Stats
+=============
+Dependencies: 3
+  - zod (validation)
+  - jsonwebtoken (JWT)
+  - bcryptjs (password hashing)
+
+Dev Dependencies: 8
+  - TypeScript tooling
+  - Testing framework (Vitest)
+  - Development server (tsx)
+
+Total Lines of Code: ~1,400
+Total Files: 20
+Bundle Size: ~150KB (minified)
+Memory Footprint: ~30MB

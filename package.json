@@ -1,0 +1,61 @@
+{
+  "name": "blitzapi",
+  "version": "0.1.0",
+  "description": "Ultra-fast, secure, and observable API framework for modern applications",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./middleware": {
+      "import": "./dist/middleware/index.js",
+      "types": "./dist/middleware/index.d.ts"
+    },
+    "./auth": {
+      "import": "./dist/auth/index.js",
+      "types": "./dist/auth/index.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc && tsc-alias",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "type-check": "tsc --noEmit",
+    "example": "tsx example-app/server.ts"
+  },
+  "keywords": [
+    "api",
+    "framework",
+    "rest",
+    "graphql",
+    "grpc",
+    "observability",
+    "security",
+    "typescript",
+    "performance"
+  ],
+  "author": "BlitzAPI Team",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.22.4",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/bcryptjs": "^2.4.6",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "tsc-alias": "^1.8.8",
+    "vitest": "^1.2.1",
+    "@vitest/coverage-v8": "^1.2.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
