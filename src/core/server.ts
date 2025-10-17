@@ -3,6 +3,7 @@ import type { ServerConfig, Context } from './types.js';
 import { Router } from './router.js';
 import { createContext, parseBody } from './context.js';
 import { HTTPError } from './types.js';
+import { ProtocolManager, type ProtocolManagerConfig } from '../protocols/manager.js';
 
 /**
  * BlitzAPI Server - The core HTTP server
@@ -12,8 +13,9 @@ export class Server {
   private router: Router;
   private config: ServerConfig;
   private httpServer?: HTTPServer;
+  private protocolManager?: ProtocolManager;
 
-  constructor(config: ServerConfig = {}) {
+  constructor(config: ServerConfig & { protocols?: ProtocolManagerConfig } = {}) {
     this.config = {
       port: 3000,
       host: '0.0.0.0',
@@ -24,6 +26,11 @@ export class Server {
     // Apply global middleware
     if (this.config.middleware) {
       this.config.middleware.forEach((mw) => this.router.use(mw));
+    }
+
+    // Initialize protocol manager if protocols are configured
+    if (config.protocols) {
+      this.protocolManager = new ProtocolManager(config.protocols);
     }
   }
 
@@ -101,7 +108,15 @@ export class Server {
         ctx.body = await parseBody(ctx.req);
       }
 
-      // Route the request
+      // Try protocol adapters first (GraphQL, etc.)
+      if (this.protocolManager) {
+        const handled = await this.protocolManager.handle(ctx);
+        if (handled) {
+          return; // Protocol adapter handled the request
+        }
+      }
+
+      // Fall through to REST routing
       await this.router.handle(ctx);
 
       // If response wasn't sent, send 204 No Content
@@ -164,8 +179,14 @@ export class Server {
     });
 
     return new Promise((resolve) => {
-      this.httpServer!.listen(serverPort, serverHost, () => {
+      this.httpServer!.listen(serverPort, serverHost, async () => {
         console.log(`🚀 BlitzAPI server running at http://${serverHost}:${serverPort}`);
+
+        // Start gRPC server if configured
+        if (this.protocolManager) {
+          await this.protocolManager.startGRPC();
+        }
+
         resolve();
       });
     });
@@ -175,6 +196,11 @@ export class Server {
    * Stop the HTTP server
    */
   async close(): Promise<void> {
+    // Stop gRPC server first
+    if (this.protocolManager) {
+      await this.protocolManager.stopGRPC();
+    }
+
     if (!this.httpServer) {
       return;
     }
@@ -189,6 +215,13 @@ export class Server {
         }
       });
     });
+  }
+
+  /**
+   * Get protocol manager
+   */
+  getProtocolManager(): ProtocolManager | undefined {
+    return this.protocolManager;
   }
 }
 

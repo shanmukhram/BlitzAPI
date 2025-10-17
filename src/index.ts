@@ -46,3 +46,21 @@ export type {
   JWTConfig,
   JWTPayload,
 } from './auth/index.js';
+
+// Protocol exports
+export {
+  ProtocolManager,
+  GraphQLAdapter,
+  GRPCAdapter,
+} from './protocols/index.js';
+
+export type {
+  Protocol,
+  Operation,
+  ProtocolAdapter,
+  Resource,
+  GraphQLConfig,
+  GraphQLOperation,
+  GRPCConfig,
+  GRPCOperation,
+} from './protocols/index.js';
