@@ -1,7 +1,7 @@
 import { createServer, Server as HTTPServer } from 'http';
 import type { ServerConfig, Context } from './types.js';
 import { Router } from './router.js';
-import { createContext, parseBody } from './context.js';
+import { createContext, createAdapterContext, parseBody } from './context.js';
 import { HTTPError } from './types.js';
 import { ProtocolManager, type ProtocolManagerConfig } from '../protocols/manager.js';
 import { initializeTracing, shutdownTracing } from '../observability/tracer.js';
@@ -9,16 +9,22 @@ import { initializeLogger } from '../observability/logger.js';
 import { initializeMetrics } from '../observability/metrics.js';
 import { traceMiddleware } from '../observability/middleware.js';
 import { initializeProfiling, profilingMiddleware } from '../observability/profiler/index.js';
+import { createAdapter, type ServerAdapter } from '../adapters/index.js';
 
 /**
  * BlitzAPI Server - The core HTTP server
  * Handles incoming requests and routes them through middleware and handlers
+ *
+ * Phase 3.3: Multiple HTTP adapters (Node.js http, uWebSockets.js)
+ * Phase 3.4: Smart adapter selection - uWebSockets by default with intelligent fallback
  */
 export class Server {
   private router: Router;
   private config: ServerConfig;
   private httpServer?: HTTPServer;
   private protocolManager?: ProtocolManager;
+  private adapter?: ServerAdapter; // Phase 3.3: Server adapter
+  private useAdapter: boolean; // Phase 3.3: Flag to use adapter pattern
 
   constructor(config: ServerConfig & { protocols?: ProtocolManagerConfig } = {}) {
     this.config = {
@@ -28,8 +34,12 @@ export class Server {
     };
     this.router = new Router();
 
+    // Phase 3.4: Smart adapter selection - ALWAYS use adapters by default
+    this.useAdapter = true;
+
     // Initialize observability (Phase 3.0)
-    if (config.observability?.tracing?.enabled !== false) {
+    // PERFORMANCE: Only enable if explicitly set to true
+    if (config.observability?.tracing?.enabled === true) {
       initializeTracing(config.observability);
       initializeLogger(config.observability?.logging);
       initializeMetrics(config.observability?.metrics);
@@ -38,7 +48,7 @@ export class Server {
       this.router.use(traceMiddleware());
 
       // Initialize profiling (Phase 3.1)
-      if (config.observability?.profiling?.enabled) {
+      if (config.observability?.profiling?.enabled === true) {
         initializeProfiling(config.observability.profiling);
         // Profiling middleware runs after tracing
         this.router.use(profilingMiddleware());
@@ -121,16 +131,20 @@ export class Server {
   }
 
   /**
-   * Handle incoming HTTP request
+   * Handle incoming HTTP request (performance optimized)
    */
   private async handleRequest(ctx: Context): Promise<void> {
     try {
-      // Parse body for POST/PUT/PATCH requests
-      if (['POST', 'PUT', 'PATCH'].includes(ctx.method)) {
-        ctx.body = await parseBody(ctx.req);
+      // Parse body for POST/PUT/PATCH requests (optimized check)
+      // Skip if already parsed (adapter mode)
+      const method = ctx.method;
+      if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+        if (!ctx.body && !this.useAdapter) {
+          ctx.body = await parseBody(ctx.req);
+        }
       }
 
-      // Try protocol adapters first (GraphQL, etc.)
+      // Try protocol adapters first (GraphQL, etc.) - only if configured
       if (this.protocolManager) {
         const handled = await this.protocolManager.handle(ctx);
         if (handled) {
@@ -190,11 +204,47 @@ export class Server {
 
   /**
    * Start the HTTP server
+   * Phase 3.3: Now supports both adapter and non-adapter modes
+   *
+   * Supports multiple signatures:
+   * - listen()
+   * - listen(port)
+   * - listen(port, callback)
+   * - listen(port, host)
+   * - listen(port, host, callback)
    */
-  async listen(port?: number, host?: string): Promise<void> {
-    const serverPort = port || this.config.port || 3000;
-    const serverHost = host || this.config.host || '0.0.0.0';
+  async listen(port?: number | (() => void), host?: string | (() => void)): Promise<void> {
+    // Handle callback in second position: listen(port, callback)
+    let callback: (() => void) | undefined;
+    let actualHost: string | undefined;
 
+    if (typeof host === 'function') {
+      callback = host;
+      actualHost = undefined;
+    } else {
+      actualHost = host;
+    }
+
+    // Handle callback in first position: listen(callback)
+    let actualPort: number | undefined;
+    if (typeof port === 'function') {
+      callback = port;
+      actualPort = undefined;
+    } else {
+      actualPort = port;
+    }
+
+    const serverPort = actualPort || this.config.port || 3000;
+    const serverHost = actualHost || this.config.host || '0.0.0.0';
+
+    // Phase 3.3: Use adapter pattern if configured
+    if (this.useAdapter) {
+      await this.listenWithAdapter(serverPort, serverHost);
+      if (callback) callback();
+      return;
+    }
+
+    // Legacy mode: Direct Node.js http server
     this.httpServer = createServer(async (req, res) => {
       const ctx = createContext(req, res);
       await this.handleRequest(ctx);
@@ -215,7 +265,65 @@ export class Server {
   }
 
   /**
+   * Start server using adapter pattern (Phase 3.3 + 3.4)
+   * Phase 3.4: Smart adapter selection with intelligent fallback
+   */
+  private async listenWithAdapter(port: number, host: string): Promise<void> {
+    // Phase 3.4: Smart adapter selection
+    this.adapter = this.selectAdapter(this.config);
+
+    // Register request handler with adapter
+    this.adapter.onRequest(async (requestInfo, rawRequest) => {
+      try {
+        // Create adapter-agnostic context
+        const { ctx, responseBuffer } = createAdapterContext(requestInfo, rawRequest);
+
+        // Parse body for POST/PUT/PATCH requests
+        const method = ctx.method;
+        if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+          ctx.body = await this.adapter!.parseBody(rawRequest);
+        }
+
+        // Handle request through BlitzAPI
+        await this.handleRequest(ctx);
+
+        // Return response data to adapter
+        return {
+          statusCode: responseBuffer.statusCode,
+          headers: responseBuffer.headers,
+          body: responseBuffer.body || '',
+        };
+      } catch (error) {
+        // Handle errors and return error response
+        const err = error as Error;
+        const statusCode = err instanceof HTTPError ? err.statusCode : 500;
+        const message = err.message || 'Internal Server Error';
+
+        return {
+          statusCode,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            error: true,
+            message,
+            ...(err instanceof HTTPError && err.details ? { details: err.details } : {}),
+            ...(process.env.NODE_ENV !== 'production' ? { stack: err.stack } : {}),
+          }),
+        };
+      }
+    });
+
+    // Start adapter listening
+    await this.adapter.listen(port, host);
+
+    // Start gRPC server if configured
+    if (this.protocolManager) {
+      await this.protocolManager.startGRPC();
+    }
+  }
+
+  /**
    * Stop the HTTP server
+   * Phase 3.3: Now supports both adapter and non-adapter modes
    */
   async close(): Promise<void> {
     // Stop gRPC server first
@@ -226,6 +334,14 @@ export class Server {
     // Shutdown observability (Phase 3.0)
     await shutdownTracing();
 
+    // Phase 3.3: Close adapter if using adapter pattern
+    if (this.adapter) {
+      await this.adapter.close();
+      this.adapter = undefined;
+      return;
+    }
+
+    // Legacy mode: Close Node.js http server
     if (!this.httpServer) {
       return;
     }
@@ -240,6 +356,79 @@ export class Server {
         }
       });
     });
+  }
+
+  /**
+   * Smart adapter selection (Phase 3.4)
+   * Automatically selects the best adapter based on configuration and availability
+   *
+   * Priority:
+   * 1. Explicit user configuration (config.adapter.type)
+   * 2. Protocol requirements (gRPC needs Node.js)
+   * 3. Try uWebSockets for maximum performance
+   * 4. Fallback to Node.js HTTP
+   */
+  private selectAdapter(config: ServerConfig): ServerAdapter {
+    // 1. If user explicitly configured an adapter, use it
+    if (config.adapter?.type) {
+      const adapterType = config.adapter.type;
+      const adapterOptions = config.adapter.options || {};
+
+      try {
+        return createAdapter(adapterType, adapterOptions);
+      } catch (error) {
+        console.warn(`⚠️  Failed to create ${adapterType} adapter:`, (error as Error).message);
+        console.log('📡 Falling back to Node.js HTTP adapter');
+        return createAdapter('node-http');
+      }
+    }
+
+    // 2. Check if protocols require Node.js HTTP
+    if (this.needsNodeHTTP(config)) {
+      console.log('📡 Using Node.js HTTP adapter (required for gRPC)');
+      return createAdapter('node-http');
+    }
+
+    // 3. Try uWebSockets for maximum performance
+    try {
+      const adapter = createAdapter('uwebsockets');
+      console.log('🚀 Using uWebSockets adapter for maximum performance');
+      console.log('   💡 Tip: ~2-3x faster than Node.js HTTP');
+      return adapter;
+    } catch (error) {
+      // uWebSockets not available, fallback to Node.js
+      console.log('📡 Using Node.js HTTP adapter (uWebSockets not available)');
+      console.log('   💡 Tip: Install uWebSockets.js for 2-3x performance boost');
+      console.log('   npm install uWebSockets.js');
+      return createAdapter('node-http');
+    }
+  }
+
+  /**
+   * Check if configuration requires Node.js HTTP adapter (Phase 3.4)
+   *
+   * @param config Server configuration
+   * @returns true if Node.js HTTP is required
+   */
+  private needsNodeHTTP(config: ServerConfig): boolean {
+    // gRPC requires Node.js http2 module
+    // Note: In the future, we could run gRPC on a separate port
+    // For now, if gRPC is enabled, use Node.js for everything
+    const protocols = (config as ServerConfig & { protocols?: ProtocolManagerConfig }).protocols;
+
+    if (protocols?.grpc) {
+      // Check if grpc is an object with enabled property, or just truthy
+      if (typeof protocols.grpc === 'object' && 'enabled' in protocols.grpc) {
+        return protocols.grpc.enabled === true;
+      }
+      // If grpc is truthy but not an object, assume it's enabled
+      return !!protocols.grpc;
+    }
+
+    // GraphQL works with both adapters
+    // REST works with both adapters
+
+    return false;
   }
 
   /**

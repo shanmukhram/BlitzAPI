@@ -2,6 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import type { ZodSchema, z } from 'zod';
 import type { TraceContext, ObservabilityConfig } from '../observability/types.js';
 import type { Span } from '@opentelemetry/api';
+import type { AdapterConfig } from '../adapters/types.js';
 
 /**
  * HTTP Methods supported by BlitzAPI
@@ -102,6 +103,7 @@ export interface ServerConfig {
   onError?: ErrorHandler;
   onNotFound?: Handler;
   observability?: ObservabilityConfig; // Phase 3.0
+  adapter?: AdapterConfig; // Phase 3.2 - Server adapter selection
 }
 
 /**

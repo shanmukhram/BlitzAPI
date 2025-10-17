@@ -64,3 +64,22 @@ export type {
   GRPCConfig,
   GRPCOperation,
 } from './protocols/index.js';
+
+// Adapter exports (Phase 3.2 & 3.3)
+export {
+  createAdapter,
+  getAvailableAdapters,
+  NodeHTTPAdapter,
+  createNodeHTTPAdapter,
+  UWebSocketsAdapter,
+  createUWebSocketsAdapter,
+} from './adapters/index.js';
+
+export type {
+  ServerAdapter,
+  RequestHandler,
+  RawRequestInfo,
+  RawResponseData,
+  AdapterConfig,
+  AdapterFactory,
+} from './adapters/index.js';

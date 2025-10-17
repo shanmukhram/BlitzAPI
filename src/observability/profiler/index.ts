@@ -8,3 +8,4 @@ export * from './middleware.js';
 export * from './storage.js';
 export * from './detector.js';
 export * from './formatter.js';
+export * from './wrapper.js';

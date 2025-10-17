@@ -55,6 +55,31 @@ export function parseQuery(queryString: string): Record<string, string | string[
   return result;
 }
 
+// Cache for split paths to avoid repeated splitting
+const pathCache = new Map<string, string[]>();
+
+function splitPath(path: string): string[] {
+  let parts = pathCache.get(path);
+  if (!parts) {
+    // Optimized splitting - avoid filter() overhead
+    parts = [];
+    let start = path[0] === '/' ? 1 : 0;
+    for (let i = start; i <= path.length; i++) {
+      if (i === path.length || path[i] === '/') {
+        if (i > start) {
+          parts.push(path.slice(start, i));
+        }
+        start = i + 1;
+      }
+    }
+    // Limit cache size to prevent memory leaks
+    if (pathCache.size < 1000) {
+      pathCache.set(path, parts);
+    }
+  }
+  return parts;
+}
+
 /**
  * Match a route pattern against a path
  * Supports dynamic segments like /users/:id
@@ -63,8 +88,13 @@ export function matchPath(
   pattern: string,
   path: string
 ): { matches: boolean; params: Record<string, string> } {
-  const patternParts = pattern.split('/').filter(Boolean);
-  const pathParts = path.split('/').filter(Boolean);
+  // Fast path for exact match (most common case)
+  if (pattern === path) {
+    return { matches: true, params: {} };
+  }
+
+  const patternParts = splitPath(pattern);
+  const pathParts = splitPath(path);
 
   if (patternParts.length !== pathParts.length) {
     return { matches: false, params: {} };
@@ -77,9 +107,8 @@ export function matchPath(
     const pathPart = pathParts[i];
 
     // Dynamic segment (e.g., :id, :userId)
-    if (patternPart.startsWith(':')) {
-      const paramName = patternPart.slice(1);
-      params[paramName] = pathPart;
+    if (patternPart.charCodeAt(0) === 58) { // ':' character - faster than startsWith
+      params[patternPart.slice(1)] = pathPart;
       continue;
     }
 

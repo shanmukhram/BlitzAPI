@@ -7,6 +7,7 @@ import type { Middleware } from '../../core/types.js';
 import type { RequestProfile, StageTiming, ProfilingConfig } from './types.js';
 import { profileStorage } from './storage.js';
 import { detectBottlenecks, calculateP95Baseline } from './detector.js';
+import { getMiddlewareTimings } from './wrapper.js';
 
 let profilingConfig: ProfilingConfig = {
   enabled: false,
@@ -125,6 +126,12 @@ export function profilingMiddleware(): Middleware {
         name: 'Routing',
         startTime: requestStart,
         duration: 0.5, // Routing is very fast
+      });
+
+      // Add middleware timings (validation, auth, etc.)
+      const middlewareTimingsFromContext = getMiddlewareTimings(ctx);
+      middlewareTimingsFromContext.forEach(timing => {
+        breakdown.push(timing);
       });
 
       // Add handler

@@ -6,23 +6,101 @@ import type {
   HTTPMethod,
   Context,
 } from './types.js';
-import { matchPath } from '../utils/url.js';
 import { HTTPError } from './types.js';
+
+/**
+ * Compiled route with pre-parsed pattern
+ */
+interface CompiledRoute extends Route {
+  compiled: {
+    parts: string[];
+    isDynamic: boolean;
+    paramIndices: number[];
+  };
+}
 
 /**
  * Router class - manages routes and middleware
  * Supports nested routers, route prefixes, and middleware composition
+ *
+ * PERFORMANCE OPTIMIZATIONS:
+ * - Static route map for O(1) exact-match lookups
+ * - Pre-compiled route patterns (parsed at registration time)
+ * - Separate storage for static vs dynamic routes
  */
 export class Router {
   private routes: Route[] = [];
   private config: RouterConfig;
+
+  // PERFORMANCE: Static route map for O(1) lookup
+  private staticRoutes = new Map<string, Map<HTTPMethod, Route>>();
+  // PERFORMANCE: Dynamic routes only (for fallback)
+  private dynamicRoutes: CompiledRoute[] = [];
+  // PERFORMANCE: Last route cache (hot path optimization)
+  private lastRouteKey: string = '';
+  private lastRoute: Route | null = null;
+  private lastParams: Record<string, string> = {};
 
   constructor(config: RouterConfig = {}) {
     this.config = config;
   }
 
   /**
-   * Register a route
+   * Split path into parts (optimized for route compilation)
+   */
+  private splitPathParts(path: string): string[] {
+    const parts: string[] = [];
+    let start = path[0] === '/' ? 1 : 0;
+    for (let i = start; i <= path.length; i++) {
+      if (i === path.length || path[i] === '/') {
+        if (i > start) {
+          parts.push(path.slice(start, i));
+        }
+        start = i + 1;
+      }
+    }
+    return parts;
+  }
+
+  /**
+   * Check if path has dynamic segments
+   */
+  private isDynamicPath(path: string): boolean {
+    return path.includes(':');
+  }
+
+  /**
+   * Pre-compile middleware chain into single handler (ULTRA-OPTIMIZED)
+   */
+  private compileMiddlewareChain(middleware: Middleware[], handler: Handler): Handler {
+    if (middleware.length === 0) {
+      // FAST PATH: No middleware - return handler directly (zero overhead!)
+      return handler;
+    }
+
+    if (middleware.length === 1) {
+      // Single middleware - simplest possible execution
+      const mw = middleware[0];
+      return async (ctx: Context) => mw(ctx, async () => handler(ctx));
+    }
+
+    // Multiple middleware - optimized composition
+    return async (ctx: Context) => {
+      let index = 0;
+      const next = async (): Promise<void> => {
+        if (index < middleware.length) {
+          await middleware[index++](ctx, next);
+        } else if (index === middleware.length) {
+          index++;
+          await handler(ctx);
+        }
+      };
+      await next();
+    };
+  }
+
+  /**
+   * Register a route (with performance optimizations)
    */
   private addRoute(
     method: HTTPMethod,
@@ -37,15 +115,54 @@ export class Router {
     const handler = handlers[handlers.length - 1] as Handler;
     const middleware = handlers.slice(0, -1) as Middleware[];
 
-    this.routes.push({
+    // PERFORMANCE: Combine global + route middleware
+    const allMiddleware = [
+      ...(this.config.middleware || []),
+      ...middleware,
+    ];
+
+    // PERFORMANCE: Pre-compile the entire middleware chain
+    const compiledHandler = this.compileMiddlewareChain(allMiddleware, handler);
+
+    const route: Route = {
       method,
       path: fullPath,
-      handler,
-      middleware: [
-        ...(this.config.middleware || []),
-        ...middleware,
-      ],
-    });
+      handler: compiledHandler, // Use pre-compiled handler
+      middleware: [], // Empty - already compiled into handler
+    };
+
+    // Keep backwards compatibility
+    this.routes.push(route);
+
+    // PERFORMANCE: Separate static and dynamic routes
+    const isDynamic = this.isDynamicPath(fullPath);
+
+    if (!isDynamic) {
+      // Static route - add to O(1) lookup map
+      if (!this.staticRoutes.has(fullPath)) {
+        this.staticRoutes.set(fullPath, new Map());
+      }
+      this.staticRoutes.get(fullPath)!.set(method, route);
+    } else {
+      // Dynamic route - pre-compile pattern
+      const parts = this.splitPathParts(fullPath);
+      const paramIndices: number[] = [];
+
+      for (let i = 0; i < parts.length; i++) {
+        if (parts[i].charCodeAt(0) === 58) { // ':' character
+          paramIndices.push(i);
+        }
+      }
+
+      this.dynamicRoutes.push({
+        ...route,
+        compiled: {
+          parts,
+          isDynamic: true,
+          paramIndices,
+        },
+      });
+    }
 
     return this;
   }
@@ -122,20 +239,69 @@ export class Router {
   }
 
   /**
-   * Find matching route for given method and path
+   * Find matching route for given method and path (ULTRA-FAST with cache)
    */
   findRoute(
     method: HTTPMethod,
     path: string
   ): { route: Route; params: Record<string, string> } | null {
-    for (const route of this.routes) {
-      if (route.method !== method) {
+    // PERFORMANCE: Check last route cache first (hot path!)
+    const routeKey = method + path;
+    if (this.lastRouteKey === routeKey && this.lastRoute) {
+      return { route: this.lastRoute, params: this.lastParams };
+    }
+
+    // PERFORMANCE: Try static routes - O(1) lookup
+    const staticMethodMap = this.staticRoutes.get(path);
+    if (staticMethodMap) {
+      const route = staticMethodMap.get(method);
+      if (route) {
+        // Cache it
+        this.lastRouteKey = routeKey;
+        this.lastRoute = route;
+        this.lastParams = {};
+        return { route, params: {} };
+      }
+    }
+
+    // PERFORMANCE: Only search dynamic routes
+    const pathParts = this.splitPathParts(path);
+    const pathLength = pathParts.length;
+
+    for (const compiledRoute of this.dynamicRoutes) {
+      if (compiledRoute.method !== method) {
         continue;
       }
 
-      const match = matchPath(route.path, path);
-      if (match.matches) {
-        return { route, params: match.params };
+      const { parts } = compiledRoute.compiled;
+
+      // Quick length check
+      if (parts.length !== pathLength) {
+        continue;
+      }
+
+      // Match parts and extract params
+      const params: Record<string, string> = {};
+      let matches = true;
+
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+
+        if (part.charCodeAt(0) === 58) { // ':' - dynamic segment
+          const paramName = part.slice(1);
+          params[paramName] = pathParts[i];
+        } else if (part !== pathParts[i]) {
+          matches = false;
+          break;
+        }
+      }
+
+      if (matches) {
+        // Cache dynamic route too
+        this.lastRouteKey = routeKey;
+        this.lastRoute = compiledRoute;
+        this.lastParams = params;
+        return { route: compiledRoute, params };
       }
     }
 
@@ -143,7 +309,7 @@ export class Router {
   }
 
   /**
-   * Execute route handler with middleware chain
+   * Execute route handler (PERFORMANCE OPTIMIZED - middleware pre-compiled)
    */
   async handle(ctx: Context): Promise<void> {
     const match = this.findRoute(ctx.method, ctx.path);
@@ -157,35 +323,9 @@ export class Router {
     // Add params to context
     ctx.params = params;
 
-    // Build middleware chain
-    const middleware = route.middleware || [];
-    const allMiddleware = [...middleware, route.handler as Middleware];
-
-    // Execute middleware chain
-    await this.executeMiddleware(ctx, allMiddleware);
-  }
-
-  /**
-   * Execute middleware chain with proper composition
-   */
-  private async executeMiddleware(
-    ctx: Context,
-    middleware: Middleware[]
-  ): Promise<void> {
-    let index = 0;
-
-    const next = async (): Promise<void> => {
-      if (index >= middleware.length) {
-        return;
-      }
-
-      const fn = middleware[index];
-      index++;
-
-      await fn(ctx, next);
-    };
-
-    await next();
+    // PERFORMANCE: Handler already has middleware compiled in
+    // Just call it directly - no chain execution needed
+    await route.handler(ctx);
   }
 
   /**

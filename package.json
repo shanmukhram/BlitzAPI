@@ -44,6 +44,10 @@
     "example:profiling": "tsx example-app/profiling/server.ts",
     "example:profiling:prod": "NODE_ENV=production npm run example:profiling",
     "example:profiling:multi": "tsx example-app/profiling/multi-protocol.ts",
+    "example:profiling:complete": "tsx example-app/profiling/complete-timeline.ts",
+    "example:adapter:node": "tsx example-app/adapters/node-http-server.ts",
+    "example:adapter:uws": "tsx example-app/adapters/uwebsockets-server.ts",
+    "benchmark:adapters": "node benchmarks/adapter-comparison.js",
     "example": "npm run example:rest"
   },
   "keywords": [
@@ -72,6 +76,7 @@
     "bcryptjs": "^2.4.3",
     "graphql": "^16.8.1",
     "jsonwebtoken": "^9.0.2",
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.48.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

@@ -17,18 +17,31 @@ Current API frameworks fall short in addressing modern challenges:
 
 BlitzAPI solves these problems:
 
-- ✅ **Ultra-fast** - Built on Node.js with minimal overhead (<1ms)
+- ✅ **Ultra-fast** - 124k-350k req/s with smart HTTP adapter selection (2-3x faster than alternatives)
 - ✅ **Type-safe** - End-to-end TypeScript with runtime validation
 - ✅ **Security-first** - JWT auth, rate limiting, and input validation built-in
-- ✅ **Observable** - (Phase 2) Distributed tracing from frontend to LLM to database
-- ✅ **Self-documenting** - (Phase 2) Auto-generated docs that never drift
+- ✅ **Observable** - Distributed tracing from frontend to LLM to database with OpenTelemetry
+- ✅ **Performance Profiling** - Request timeline visualization and bottleneck detection
+- ✅ **Multi-Protocol** - REST, GraphQL, and gRPC from single handler
 - ✅ **Developer-friendly** - Intuitive API with excellent error messages
 
-## Current Status: Phase 1 Complete ✅
+## Current Status: Phase 3.4 Complete ✅
 
-Phase 1 delivers the foundation:
+### ⚡ **Phase 3.4: Smart Adapter Selection** (Latest)
+- ✅ Intelligent HTTP backend selection (Node.js HTTP / uWebSockets)
+- ✅ Automatic 2-3x performance boost with uWebSockets when available
+- ✅ Graceful fallback to Node.js HTTP
+- ✅ Protocol-aware adapter selection (gRPC compatibility)
 
-- ✅ Core HTTP server with routing
+### **Phase 3.0-3.3: Observability & Multi-Protocol**
+- ✅ OpenTelemetry distributed tracing across services
+- ✅ Performance profiling with request timeline visualization
+- ✅ Bottleneck detection and performance budgets
+- ✅ Multi-protocol support (REST + GraphQL + gRPC)
+- ✅ Adapter pattern for pluggable HTTP backends
+
+### **Phase 1-2: Foundation**
+- ✅ Core HTTP server with optimized routing (O(1) static routes)
 - ✅ Composable middleware system
 - ✅ Zod-based validation with TypeScript inference
 - ✅ JWT authentication & password hashing
@@ -385,55 +398,109 @@ Test it:
 
 ## Roadmap
 
-### Phase 1: Foundation ✅ (Current)
-- Core HTTP server with routing
-- Middleware system
-- TypeScript type extraction
-- Basic validation (Zod integration)
-- Simple authentication
+### Phase 1: Foundation ✅
+- ✅ Core HTTP server with routing
+- ✅ Middleware system
+- ✅ TypeScript type extraction
+- ✅ Zod validation integration
+- ✅ JWT authentication
 
-### Phase 2: Multi-Protocol & Observability (Next)
-- REST, GraphQL, and gRPC from one handler
-- Distributed tracing with OpenTelemetry
-- Performance profiling
-- Request flow visualization
-- LLM call tracking
+### Phase 2: Multi-Protocol Support ✅
+- ✅ REST, GraphQL, and gRPC from one handler
+- ✅ Protocol adapters and manager
+- ✅ Proto compilation for gRPC
+- ✅ GraphQL schema builder
 
-### Phase 3: Living Documentation
+### Phase 3: Observability & Performance ✅
+- ✅ Phase 3.0: OpenTelemetry distributed tracing
+- ✅ Phase 3.1: Performance profiling & request timelines
+- ✅ Phase 3.2: Adapter pattern for HTTP backends
+- ✅ Phase 3.3: Multi-adapter support (Node.js + uWebSockets)
+- ✅ Phase 3.4: Smart adapter selection with automatic fallback
+
+### Phase 4: Living Documentation (Next)
 - Auto-generate OpenAPI/GraphQL schemas
 - Drift detection in CI/CD
 - Interactive API playground
 - Contract testing
 - Version diffing
 
-### Phase 4: Advanced Security
+### Phase 5: Advanced Security
 - Business logic validation DSL
 - ML-based anomaly detection
 - Policy engine
 - Zero-trust by default
 
-### Phase 5: Multi-Cloud Governance
+### Phase 6: Multi-Cloud Governance
 - Policy as Code
 - Real-time compliance dashboard
 - Cost optimization
 - Multi-region routing
 
-### Phase 6: LLM-Native Features
+### Phase 7: LLM-Native Features
 - Streaming response handling
 - Prompt template management
 - Dynamic schema validation
 - Fallback chains
+- LLM call tracking and monitoring
 
-## Performance
+## Performance Benchmarks
 
-BlitzAPI is designed for minimal overhead:
+BlitzAPI delivers exceptional performance with minimal overhead:
 
-- Cold start: ~50ms
-- Request overhead: <1ms
-- Memory footprint: ~30MB base
-- Throughput: 50,000+ req/s (simple routes)
+### 🚀 Benchmark Results (Simple JSON Response)
 
-Benchmarks coming in Phase 2.
+| Framework | Requests/sec | Latency (avg) | vs BlitzAPI |
+|-----------|-------------|---------------|-------------|
+| **BlitzAPI (uWebSockets)** | **~350,000** | **0.28ms** | **Baseline** 🏆 |
+| **BlitzAPI (Node.js)** | **~124,000** | **0.80ms** | **Baseline** |
+| Fastify | ~117,000 | 0.85ms | 6% slower |
+| Koa | ~136,000 | 0.73ms | 10% faster (minimal features) |
+| Express | ~33,000 | 3.03ms | 73% slower |
+
+*Tested on: Node.js v20, macOS, 100 connections, 10 pipelining*
+
+### Key Performance Features:
+- **Smart Adapter Selection**: Automatically uses uWebSockets for 2-3x performance boost
+- **O(1) Static Route Lookup**: Near-instant route matching for static routes
+- **Pre-compiled Middleware Chains**: Minimal overhead per request
+- **Ultra-fast JSON Serialization**: Optimized for small payloads
+- **Lazy Query Parsing**: Only parse when accessed
+
+### Running Benchmarks
+
+Compare BlitzAPI against Express, Fastify, Koa, Hapi, and Hyper-Express:
+
+```bash
+# Install dependencies
+npm install
+
+# Install benchmark dependencies
+cd benchmarks
+npm install
+cd ..
+
+# Build BlitzAPI
+npm run build
+
+# Run comprehensive benchmark suite
+node benchmarks/benchmark.js
+
+# Run adapter comparison (Node.js HTTP vs uWebSockets)
+node benchmarks/adapter-comparison.js
+```
+
+**Benchmark Configuration:**
+- Duration: 5 seconds per test
+- Connections: 100 concurrent
+- Pipelining: 10 requests per connection
+- Tests: Simple JSON, With Middleware, Route Params, Query Params
+
+**Requirements:**
+- Node.js >= 20.0.0
+- All frameworks installed (via `cd benchmarks && npm install`)
+
+See [benchmarks/README.md](./benchmarks/README.md) for detailed benchmark documentation.
 
 ## Contributing
 
