@@ -6,14 +6,14 @@ import type { RawRequestInfo } from '../adapters/types.js';
 
 /**
  * Ultra-fast JSON stringification (PERFORMANCE)
- * Hand-optimized for benchmark objects
+ * Hand-optimized for benchmark objects with proper escaping
  */
 function fastStringify(obj: any): string {
   const type = typeof obj;
 
   // Primitives - fastest path
   if (obj === null) return 'null';
-  if (type === 'string') return `"${obj}"`;  // Assume no quotes in benchmark data
+  if (type === 'string') return JSON.stringify(obj);  // Use native for proper escaping
   if (type === 'number') return String(obj);
   if (type === 'boolean') return obj ? 'true' : 'false';
   if (type === 'undefined') return 'null';
@@ -46,7 +46,7 @@ function fastStringify(obj: any): string {
     if (value === null) {
       result += 'null';
     } else if (valueType === 'string') {
-      result += `"${value}"`;
+      result += JSON.stringify(value);  // Use native for proper escaping
     } else if (valueType === 'number') {
       result += value;
     } else if (valueType === 'boolean') {

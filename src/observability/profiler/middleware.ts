@@ -121,11 +121,14 @@ export function profilingMiddleware(): Middleware {
       // Build breakdown
       const breakdown: StageTiming[] = [];
 
-      // Add routing (minimal time)
+      // Calculate routing time (time before handler started)
+      const routingDuration = handlerStart - requestStart;
+
+      // Add routing
       breakdown.push({
         name: 'Routing',
         startTime: requestStart,
-        duration: 0.5, // Routing is very fast
+        duration: routingDuration,
       });
 
       // Add middleware timings (validation, auth, etc.)
@@ -148,9 +151,9 @@ export function profilingMiddleware(): Middleware {
         duration: serializationDuration,
       });
 
-      // Calculate percentages
+      // Calculate percentages based on actual total duration
       breakdown.forEach(stage => {
-        stage.percentage = (stage.duration / totalDuration) * 100;
+        stage.percentage = totalDuration > 0 ? (stage.duration / totalDuration) * 100 : 0;
       });
 
       // Create profile
@@ -163,7 +166,7 @@ export function profilingMiddleware(): Middleware {
         timestamp: Date.now(),
 
         stages: {
-          routing: 0.5,
+          routing: routingDuration,
           middleware: middlewareTimings,
           handler: handlerDuration,
           serialization: serializationDuration,
@@ -206,7 +209,7 @@ export function profilingMiddleware(): Middleware {
         );
       }
 
-      // Store profile
+      // Store profile (synchronous operation)
       profileStorage.store(profile);
 
       // Attach profile to context for user access
