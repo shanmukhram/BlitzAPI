@@ -55,6 +55,30 @@
             width: 120px;
             height: 120px;
             margin-bottom: 2rem;
+            animation: flash-random 3s infinite;
+        }
+
+        @keyframes flash-random {
+            0% { opacity: 1; }
+            5% { opacity: 0.3; }
+            10% { opacity: 1; }
+            15% { opacity: 1; }
+            20% { opacity: 0.3; }
+            22% { opacity: 1; }
+            24% { opacity: 0.3; }
+            26% { opacity: 1; }
+            30% { opacity: 1; }
+            45% { opacity: 0.3; }
+            48% { opacity: 1; }
+            60% { opacity: 1; }
+            65% { opacity: 0.3; }
+            67% { opacity: 1; }
+            69% { opacity: 0.3; }
+            71% { opacity: 1; }
+            80% { opacity: 1; }
+            85% { opacity: 0.3; }
+            87% { opacity: 1; }
+            100% { opacity: 1; }
         }
 
         h1 {
@@ -423,7 +447,7 @@
     <div class="container">
         <div class="stats">
             <div class="stat-card">
-                <div class="stat-number">350K</div>
+                <div class="stat-number">350K+</div>
                 <div class="stat-label">Requests/second</div>
             </div>
             <div class="stat-card">
@@ -435,7 +459,7 @@
                 <div class="stat-label">Type Safe</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">0ms</div>
+                <div class="stat-number">0</div>
                 <div class="stat-label">Overhead</div>
             </div>
         </div>
