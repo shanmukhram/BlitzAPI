@@ -4,82 +4,488 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="N3-IIsmTpQG_njg9cOJ6nIFPiw_2KCt9uwC1ogd3xn0" />
-    <title>RamAPI - Ultra-fast, Secure, and Observable API Framework</title>
+    <meta name="description" content="RamAPI - Ultra-fast, secure, and observable TypeScript API framework supporting REST, GraphQL, and gRPC with built-in OpenTelemetry tracing">
+    <meta name="keywords" content="API framework, TypeScript, REST, GraphQL, gRPC, OpenTelemetry, observability, performance">
+    <meta property="og:title" content="RamAPI - Next-Generation API Framework">
+    <meta property="og:description" content="Ultra-fast, secure, and observable API framework for modern applications">
+    <meta property="og:type" content="website">
+    <title>RamAPI - Ultra-fast API Framework for Modern Applications</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e4e4e7;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(88, 166, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            background: #0d1117;
-            color: #c9d1d9;
+            position: relative;
+            z-index: 1;
         }
+
+        .logo {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
         h1 {
-            color: #58a6ff;
-            border-bottom: 2px solid #21262d;
-            padding-bottom: 10px;
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
         }
-        a {
-            color: #58a6ff;
-            text-decoration: none;
+
+        .tagline {
+            font-size: 1.5rem;
+            color: #a1a1aa;
+            margin-bottom: 3rem;
+            font-weight: 300;
         }
-        a:hover {
-            text-decoration: underline;
+
+        .badges {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
         }
-        .container {
-            background: #161b22;
-            padding: 30px;
-            border-radius: 6px;
-            border: 1px solid #30363d;
-        }
+
         .badge {
-            display: inline-block;
-            padding: 5px 10px;
-            background: #238636;
+            padding: 0.6rem 1.2rem;
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid rgba(88, 166, 255, 0.3);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #58a6ff;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: rgba(88, 166, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(88, 166, 255, 0.2);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
             color: white;
-            border-radius: 4px;
-            margin: 5px;
+            box-shadow: 0 10px 30px rgba(88, 166, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(88, 166, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e4e4e7;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem auto;
+            padding: 0 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #a1a1aa;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .features {
+            padding: 6rem 20px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(88, 166, 255, 0.2);
+            border-color: rgba(88, 166, 255, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #58a6ff;
+        }
+
+        .feature-description {
+            color: #a1a1aa;
+            line-height: 1.8;
+        }
+
+        .code-section {
+            padding: 6rem 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .code-container {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            overflow-x: auto;
+        }
+
+        .code-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        pre {
+            margin: 0;
+            color: #e4e4e7;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .keyword { color: #ff79c6; }
+        .string { color: #50fa7b; }
+        .function { color: #8be9fd; }
+        .comment { color: #6272a4; }
+
+        .footer {
+            text-align: center;
+            padding: 4rem 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #a1a1aa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #58a6ff;
+        }
+
+        .copyright {
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .tagline { font-size: 1.2rem; }
+            .section-title { font-size: 2rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 RamAPI</h1>
-        <p><strong>Ultra-fast, secure, and observable API framework for modern applications</strong></p>
+    <section class="hero">
+        <div class="container">
+            <div class="logo">🚀</div>
+            <h1>RamAPI</h1>
+            <p class="tagline">Ultra-fast, secure, and observable API framework for modern applications</p>
 
-        <div>
-            <span class="badge">TypeScript</span>
-            <span class="badge">REST</span>
-            <span class="badge">GraphQL</span>
-            <span class="badge">gRPC</span>
-            <span class="badge">Observability</span>
+            <div class="badges">
+                <span class="badge">TypeScript</span>
+                <span class="badge">REST</span>
+                <span class="badge">GraphQL</span>
+                <span class="badge">gRPC</span>
+                <span class="badge">OpenTelemetry</span>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="https://github.com/shanmukhram/RamAPI" class="btn btn-primary">
+                    📖 Documentation
+                </a>
+                <a href="https://www.npmjs.com/package/ramapi" class="btn btn-secondary">
+                    📦 Get Started
+                </a>
+            </div>
         </div>
+    </section>
 
-        <h2>📖 Documentation</h2>
-        <p>For full documentation, visit the <a href="https://github.com/shanmukhram/RamAPI">GitHub Repository</a></p>
-
-        <h2>✨ Key Features</h2>
-        <ul>
-            <li>⚡ Ultra-fast performance (up to 350k req/s)</li>
-            <li>🔒 Security-first with JWT authentication</li>
-            <li>📊 Built-in OpenTelemetry distributed tracing</li>
-            <li>🎯 Multi-protocol support (REST, GraphQL, gRPC)</li>
-            <li>🔍 Request flow visualization</li>
-            <li>✅ Type-safe with runtime validation</li>
-        </ul>
-
-        <h2>🔗 Links</h2>
-        <ul>
-            <li><a href="https://github.com/shanmukhram/RamAPI">GitHub Repository</a></li>
-            <li><a href="https://github.com/shanmukhram/RamAPI#readme">README</a></li>
-            <li><a href="https://www.npmjs.com/package/ramapi">NPM Package</a></li>
-        </ul>
-
-        <hr style="border-color: #21262d; margin: 30px 0;">
-        <p style="text-align: center; color: #8b949e;">
-            Created by <a href="https://github.com/shanmukhram">Shanmukh Ram</a>
-        </p>
+    <div class="stats container">
+        <div class="stat-card">
+            <div class="stat-number">350K</div>
+            <div class="stat-label">Requests/second</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">3</div>
+            <div class="stat-label">Protocol Support</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Type Safe</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">0ms</div>
+            <div class="stat-label">Overhead</div>
+        </div>
     </div>
+
+    <section class="features">
+        <h2 class="section-title">✨ Powerful Features</h2>
+        <div class="features-grid container">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Blazing Fast Performance</h3>
+                <p class="feature-description">
+                    Built for speed with O(1) route matching, pre-compiled middleware chains, and smart adapter selection.
+                    Achieve up to 350,000 requests per second with uWebSockets.js adapter.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">Security First</h3>
+                <p class="feature-description">
+                    Built-in JWT authentication, bcrypt password hashing, rate limiting, CORS support,
+                    and input validation with Zod. Production-ready security out of the box.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Full Observability</h3>
+                <p class="feature-description">
+                    OpenTelemetry distributed tracing, performance profiling, request flow visualization,
+                    and bottleneck detection. See exactly what's happening in your application.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Multi-Protocol Support</h3>
+                <p class="feature-description">
+                    Single codebase supporting REST, GraphQL, and gRPC. Write your business logic once
+                    and expose it through multiple protocols seamlessly.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3 class="feature-title">Request Flow Visualization</h3>
+                <p class="feature-description">
+                    ASCII waterfall charts and Mermaid sequence diagrams showing database queries,
+                    HTTP calls, cache operations with precise timing and dependency tracking.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">✅</div>
+                <h3 class="feature-title">Type-Safe Development</h3>
+                <p class="feature-description">
+                    End-to-end TypeScript with runtime validation using Zod. Catch errors at compile time
+                    and runtime. Full IDE autocomplete and IntelliSense support.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="code-section">
+        <h2 class="section-title">🛠️ Simple & Elegant API</h2>
+        <div class="code-container">
+            <div class="code-header">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+            </div>
+            <pre><span class="keyword">import</span> { <span class="function">createApp</span>, <span class="function">validate</span>, <span class="function">authenticate</span> } <span class="keyword">from</span> <span class="string">'ramapi'</span>;
+<span class="keyword">import</span> { z } <span class="keyword">from</span> <span class="string">'zod'</span>;
+
+<span class="comment">// Create your API server</span>
+<span class="keyword">const</span> app = <span class="function">createApp</span>({
+  observability: {
+    tracing: { <span class="keyword">enabled</span>: <span class="keyword">true</span>, serviceName: <span class="string">'my-api'</span> }
+  }
+});
+
+<span class="comment">// Define a validated endpoint</span>
+app.<span class="function">post</span>(<span class="string">'/users'</span>,
+  <span class="function">validate</span>({
+    body: z.object({
+      name: z.string(),
+      email: z.string().email()
+    })
+  }),
+  <span class="keyword">async</span> (ctx) => {
+    <span class="keyword">const</span> user = <span class="keyword">await</span> createUser(ctx.body);
+    ctx.<span class="function">json</span>(user, <span class="keyword">201</span>);
+  }
+);
+
+<span class="comment">// Protected route with authentication</span>
+app.<span class="function">get</span>(<span class="string">'/profile'</span>, <span class="function">authenticate</span>(), (ctx) => {
+  ctx.<span class="function">json</span>({ user: ctx.user });
+});
+
+app.<span class="function">listen</span>(<span class="keyword">3000</span>);</pre>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="https://github.com/shanmukhram/RamAPI">GitHub</a>
+            <a href="https://github.com/shanmukhram/RamAPI#readme">Documentation</a>
+            <a href="https://www.npmjs.com/package/ramapi">NPM Package</a>
+            <a href="https://github.com/shanmukhram/RamAPI/issues">Report Issues</a>
+        </div>
+        <p class="copyright">
+            Created with ❤️ by <a href="https://github.com/shanmukhram" style="color: #58a6ff; text-decoration: none;">Shanmukh Ram</a>
+        </p>
+    </footer>
 </body>
 </html>
