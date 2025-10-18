@@ -12,7 +12,7 @@
     <title>RamAPI - Ultra-fast API Framework for Modern Applications</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -23,8 +23,8 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-            color: #e4e4e7;
+            background: #000000;
+            color: #ffffff;
             overflow-x: hidden;
         }
 
@@ -35,58 +35,45 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 40px 20px;
+            padding: 80px 20px;
             position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(88, 166, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-            pointer-events: none;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
+            padding: 0 20px;
         }
 
-        .logo {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            animation: float 3s ease-in-out infinite;
+        .icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 2rem;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+        .hero-icon {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
         }
 
         h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            letter-spacing: -2px;
+            font-size: 5rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            letter-spacing: -3px;
+            line-height: 1.1;
         }
 
         .tagline {
             font-size: 1.5rem;
-            color: #a1a1aa;
+            color: #666666;
             margin-bottom: 3rem;
-            font-weight: 300;
+            font-weight: 400;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .badges {
@@ -98,205 +85,254 @@
         }
 
         .badge {
-            padding: 0.6rem 1.2rem;
-            background: rgba(88, 166, 255, 0.1);
-            border: 1px solid rgba(88, 166, 255, 0.3);
-            border-radius: 50px;
-            font-size: 0.9rem;
+            padding: 0.5rem 1.2rem;
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 6px;
+            font-size: 0.875rem;
             font-weight: 500;
-            color: #58a6ff;
-            transition: all 0.3s ease;
+            color: #999999;
+            transition: all 0.2s ease;
         }
 
         .badge:hover {
-            background: rgba(88, 166, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(88, 166, 255, 0.2);
+            background: #222222;
+            border-color: #444444;
+            color: #ffffff;
         }
 
         .cta-buttons {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             justify-content: center;
             margin-bottom: 4rem;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: 8px;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            cursor: pointer;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
-            color: white;
-            box-shadow: 0 10px 30px rgba(88, 166, 255, 0.3);
+            background: #ffffff;
+            color: #000000;
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(88, 166, 255, 0.4);
+            background: #e6e6e6;
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: #e4e4e7;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #333333;
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
+            background: #1a1a1a;
+            border-color: #444444;
+            transform: translateY(-2px);
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 4rem auto;
-            padding: 0 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            margin: 6rem auto;
+            background: #1a1a1a;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2rem;
+            background: #000000;
+            padding: 3rem 2rem;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .stat-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: #0a0a0a;
         }
 
         .stat-number {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #ffffff;
+            line-height: 1;
+            margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            color: #a1a1aa;
-            font-size: 1rem;
-            margin-top: 0.5rem;
+            color: #666666;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .features {
             padding: 6rem 20px;
-            background: rgba(0, 0, 0, 0.2);
         }
 
         .section-title {
             text-align: center;
             font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: 800;
+            margin-bottom: 4rem;
+            color: #ffffff;
+            letter-spacing: -1px;
         }
 
-        .features-grid {
+        /* Bento Grid Layout */
+        .bento-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        .feature-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .bento-item {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
             border-radius: 16px;
             padding: 2.5rem;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(88, 166, 255, 0.2);
-            border-color: rgba(88, 166, 255, 0.3);
+        .bento-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #333333, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bento-item:hover {
+            background: #111111;
+            border-color: #333333;
+        }
+
+        .bento-item:hover::before {
+            opacity: 1;
+        }
+
+        /* Bento Grid Sizes */
+        .bento-large {
+            grid-column: span 6;
+        }
+
+        .bento-medium {
+            grid-column: span 4;
+        }
+
+        .bento-small {
+            grid-column: span 3;
+        }
+
+        .bento-full {
+            grid-column: span 12;
         }
 
         .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1.5rem;
+            stroke: #666666;
+            transition: stroke 0.3s ease;
+        }
+
+        .bento-item:hover .feature-icon {
+            stroke: #ffffff;
         }
 
         .feature-title {
             font-size: 1.5rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 1rem;
-            color: #58a6ff;
+            color: #ffffff;
         }
 
         .feature-description {
-            color: #a1a1aa;
-            line-height: 1.8;
+            color: #666666;
+            line-height: 1.7;
+            font-size: 0.95rem;
         }
 
         .code-section {
             padding: 6rem 20px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .code-container {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
             border-radius: 16px;
-            padding: 2rem;
-            overflow-x: auto;
+            padding: 0;
+            overflow: hidden;
         }
 
         .code-header {
             display: flex;
+            align-items: center;
             gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1rem 1.5rem;
+            background: #000000;
+            border-bottom: 1px solid #1a1a1a;
         }
 
         .code-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
+            background: #333333;
         }
 
-        .dot-red { background: #ff5f56; }
-        .dot-yellow { background: #ffbd2e; }
-        .dot-green { background: #27c93f; }
+        .code-title {
+            margin-left: auto;
+            font-size: 0.875rem;
+            color: #666666;
+        }
 
         pre {
             margin: 0;
-            color: #e4e4e7;
+            padding: 2rem;
+            color: #ffffff;
             font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             line-height: 1.8;
+            overflow-x: auto;
         }
 
-        .keyword { color: #ff79c6; }
-        .string { color: #50fa7b; }
-        .function { color: #8be9fd; }
-        .comment { color: #6272a4; }
+        .keyword { color: #888888; }
+        .string { color: #cccccc; }
+        .function { color: #ffffff; }
+        .comment { color: #444444; }
 
         .footer {
             text-align: center;
             padding: 4rem 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid #1a1a1a;
+            margin-top: 6rem;
         }
 
         .footer-links {
@@ -308,25 +344,48 @@
         }
 
         .footer-links a {
-            color: #a1a1aa;
+            color: #666666;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: color 0.2s ease;
+            font-size: 0.875rem;
         }
 
         .footer-links a:hover {
-            color: #58a6ff;
+            color: #ffffff;
         }
 
         .copyright {
-            color: #71717a;
-            font-size: 0.9rem;
+            color: #444444;
+            font-size: 0.875rem;
+        }
+
+        .copyright a {
+            color: #666666;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .copyright a:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 1024px) {
+            .bento-large,
+            .bento-medium,
+            .bento-small {
+                grid-column: span 12;
+            }
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
+            h1 { font-size: 3rem; }
             .tagline { font-size: 1.2rem; }
             .section-title { font-size: 2rem; }
-            .features-grid { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2.5rem; }
             .stats { grid-template-columns: 1fr; }
         }
     </style>
@@ -334,7 +393,11 @@
 <body>
     <section class="hero">
         <div class="container">
-            <div class="logo">🚀</div>
+            <!-- Hero Icon -->
+            <svg class="hero-icon" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="1.5">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+
             <h1>RamAPI</h1>
             <p class="tagline">Ultra-fast, secure, and observable API framework for modern applications</p>
 
@@ -348,66 +411,78 @@
 
             <div class="cta-buttons">
                 <a href="https://github.com/shanmukhram/RamAPI" class="btn btn-primary">
-                    📖 Documentation
+                    Documentation
                 </a>
                 <a href="https://www.npmjs.com/package/ramapi" class="btn btn-secondary">
-                    📦 Get Started
+                    Get Started
                 </a>
             </div>
         </div>
     </section>
 
-    <div class="stats container">
-        <div class="stat-card">
-            <div class="stat-number">350K</div>
-            <div class="stat-label">Requests/second</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">3</div>
-            <div class="stat-label">Protocol Support</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Type Safe</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">0ms</div>
-            <div class="stat-label">Overhead</div>
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">350K</div>
+                <div class="stat-label">Requests/second</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Protocols</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Type Safe</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0ms</div>
+                <div class="stat-label">Overhead</div>
+            </div>
         </div>
     </div>
 
     <section class="features">
-        <h2 class="section-title">✨ Powerful Features</h2>
-        <div class="features-grid container">
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
+        <h2 class="section-title">Powerful Features</h2>
+        <div class="bento-grid container">
+            <!-- Large cards -->
+            <div class="bento-item bento-large">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
                 <h3 class="feature-title">Blazing Fast Performance</h3>
                 <p class="feature-description">
                     Built for speed with O(1) route matching, pre-compiled middleware chains, and smart adapter selection.
-                    Achieve up to 350,000 requests per second with uWebSockets.js adapter.
+                    Achieve up to 350,000 requests per second with uWebSockets.js adapter. Optimized for modern JavaScript engines.
                 </p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">🔒</div>
+            <div class="bento-item bento-large">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
                 <h3 class="feature-title">Security First</h3>
                 <p class="feature-description">
-                    Built-in JWT authentication, bcrypt password hashing, rate limiting, CORS support,
-                    and input validation with Zod. Production-ready security out of the box.
+                    Built-in JWT authentication, bcrypt password hashing, rate limiting, CORS support, and input validation with Zod.
+                    Production-ready security out of the box with best practices enforced.
                 </p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
+            <!-- Medium cards -->
+            <div class="bento-item bento-medium">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
                 <h3 class="feature-title">Full Observability</h3>
                 <p class="feature-description">
-                    OpenTelemetry distributed tracing, performance profiling, request flow visualization,
-                    and bottleneck detection. See exactly what's happening in your application.
+                    OpenTelemetry distributed tracing, performance profiling, request flow visualization, and bottleneck detection.
+                    See exactly what's happening in your application.
                 </p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
+            <div class="bento-item bento-medium">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
                 <h3 class="feature-title">Multi-Protocol Support</h3>
                 <p class="feature-description">
                     Single codebase supporting REST, GraphQL, and gRPC. Write your business logic once
@@ -415,33 +490,68 @@
                 </p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">🔍</div>
+            <div class="bento-item bento-medium">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+                </svg>
                 <h3 class="feature-title">Request Flow Visualization</h3>
                 <p class="feature-description">
-                    ASCII waterfall charts and Mermaid sequence diagrams showing database queries,
-                    HTTP calls, cache operations with precise timing and dependency tracking.
+                    ASCII waterfall charts and Mermaid sequence diagrams showing database queries, HTTP calls,
+                    and cache operations with precise timing and dependency tracking.
                 </p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">✅</div>
-                <h3 class="feature-title">Type-Safe Development</h3>
+            <!-- Small cards -->
+            <div class="bento-item bento-small">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h3 class="feature-title">Type-Safe</h3>
                 <p class="feature-description">
-                    End-to-end TypeScript with runtime validation using Zod. Catch errors at compile time
-                    and runtime. Full IDE autocomplete and IntelliSense support.
+                    End-to-end TypeScript with runtime validation using Zod. Full IDE support.
+                </p>
+            </div>
+
+            <div class="bento-item bento-small">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                </svg>
+                <h3 class="feature-title">Middleware</h3>
+                <p class="feature-description">
+                    Powerful middleware system with pre-compiled chains for zero overhead.
+                </p>
+            </div>
+
+            <div class="bento-item bento-small">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                <h3 class="feature-title">Hot Paths</h3>
+                <p class="feature-description">
+                    Optimized hot paths with route caching and pre-bound handlers.
+                </p>
+            </div>
+
+            <div class="bento-item bento-small">
+                <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <h3 class="feature-title">Documented</h3>
+                <p class="feature-description">
+                    Comprehensive documentation with examples and best practices.
                 </p>
             </div>
         </div>
     </section>
 
     <section class="code-section">
-        <h2 class="section-title">🛠️ Simple & Elegant API</h2>
+        <h2 class="section-title">Simple & Elegant API</h2>
         <div class="code-container">
             <div class="code-header">
-                <span class="code-dot dot-red"></span>
-                <span class="code-dot dot-yellow"></span>
-                <span class="code-dot dot-green"></span>
+                <span class="code-dot"></span>
+                <span class="code-dot"></span>
+                <span class="code-dot"></span>
+                <span class="code-title">server.ts</span>
             </div>
             <pre><span class="keyword">import</span> { <span class="function">createApp</span>, <span class="function">validate</span>, <span class="function">authenticate</span> } <span class="keyword">from</span> <span class="string">'ramapi'</span>;
 <span class="keyword">import</span> { z } <span class="keyword">from</span> <span class="string">'zod'</span>;
@@ -481,10 +591,10 @@ app.<span class="function">listen</span>(<span class="keyword">3000</span>);</pr
             <a href="https://github.com/shanmukhram/RamAPI">GitHub</a>
             <a href="https://github.com/shanmukhram/RamAPI#readme">Documentation</a>
             <a href="https://www.npmjs.com/package/ramapi">NPM Package</a>
-            <a href="https://github.com/shanmukhram/RamAPI/issues">Report Issues</a>
+            <a href="https://github.com/shanmukhram/RamAPI/issues">Issues</a>
         </div>
         <p class="copyright">
-            Created with ❤️ by <a href="https://github.com/shanmukhram" style="color: #58a6ff; text-decoration: none;">Shanmukh Ram</a>
+            Created by <a href="https://github.com/shanmukhram">Shanmukh Ram</a>
         </p>
     </footer>
 </body>
