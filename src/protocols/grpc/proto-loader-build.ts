@@ -161,7 +161,7 @@ function capitalize(str: string): string {
 export function loadCompiledProto(
   packageName: string,
   serviceName: string,
-  compiledDir: string = join(process.cwd(), '.blitzapi', 'protos')
+  compiledDir: string = join(process.cwd(), '.ramapi', 'protos')
 ): grpc.ServiceDefinition {
   const compiledPath = join(compiledDir, `${serviceName}.compiled.json`);
 
@@ -194,7 +194,7 @@ export function loadCompiledProto(
  * Get list of all compiled proto services
  */
 export function getCompiledServices(
-  compiledDir: string = join(process.cwd(), '.blitzapi', 'protos')
+  compiledDir: string = join(process.cwd(), '.ramapi', 'protos')
 ): string[] {
   if (!existsSync(compiledDir)) {
     return [];

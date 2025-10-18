@@ -90,7 +90,7 @@ const operations: Operation[] = [
 // ============================================================================
 
 async function buildProtos() {
-  console.log('🚀 BlitzAPI Proto Compiler');
+  console.log('🚀 RamAPI Proto Compiler');
   console.log('');
 
   // Create app with gRPC enabled
@@ -119,7 +119,7 @@ async function buildProtos() {
   // Compile for production
   await grpcAdapter.compileForProduction();
 
-  console.log('💡 Tip: Add .blitzapi/ to your .gitignore');
+  console.log('💡 Tip: Add .ramapi/ to your .gitignore');
   console.log('   These files are generated and can be rebuilt anytime.');
   console.log('');
 }

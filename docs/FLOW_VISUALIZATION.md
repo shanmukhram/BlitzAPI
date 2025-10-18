@@ -4,7 +4,7 @@
 
 ## Overview
 
-BlitzAPI's Flow Visualization feature provides deep insights into how your requests flow through your application. It automatically tracks:
+RamAPI's Flow Visualization feature provides deep insights into how your requests flow through your application. It automatically tracks:
 
 - **Lifecycle Events**: Routing, handler execution, response serialization
 - **Database Queries**: SQL queries with duration and metadata
@@ -30,8 +30,8 @@ BlitzAPI's Flow Visualization feature provides deep insights into how your reque
 ### 1. Enable Flow Tracking
 
 ```typescript
-import { createApp } from 'blitzapi';
-import { flowTrackingMiddleware } from 'blitzapi/observability/flow';
+import { createApp } from 'ramapi';
+import { flowTrackingMiddleware } from 'ramapi/observability/flow';
 
 const app = createApp({
   port: 3000,
@@ -52,7 +52,7 @@ app.use(flowTrackingMiddleware());
 ### 2. Track Dependencies
 
 ```typescript
-import { trackDatabase, trackHTTP, trackCache } from 'blitzapi/observability/flow';
+import { trackDatabase, trackHTTP, trackCache } from 'ramapi/observability/flow';
 
 app.get('/users/:id', async (ctx) => {
   // Track database query
@@ -131,7 +131,7 @@ Use tracking utilities to capture specific operations:
 Track SQL queries with full context:
 
 ```typescript
-import { trackDatabase } from 'blitzapi/observability/flow';
+import { trackDatabase } from 'ramapi/observability/flow';
 
 app.get('/posts', async (ctx) => {
   const posts = await trackDatabase(
@@ -189,7 +189,7 @@ app.get('/dashboard', async (ctx) => {
 Track external API calls:
 
 ```typescript
-import { trackHTTP } from 'blitzapi/observability/flow';
+import { trackHTTP } from 'ramapi/observability/flow';
 
 app.get('/weather/:city', async (ctx) => {
   const weatherData = await trackHTTP(
@@ -242,7 +242,7 @@ app.get('/aggregate/:userId', async (ctx) => {
 Track cache interactions with hit/miss tracking:
 
 ```typescript
-import { trackCache } from 'blitzapi/observability/flow';
+import { trackCache } from 'ramapi/observability/flow';
 
 app.get('/products/:id', async (ctx) => {
   const cacheKey = `product:${ctx.params.id}`;
@@ -308,7 +308,7 @@ app.put('/products/:id', async (ctx) => {
 Track any custom operation:
 
 ```typescript
-import { trackOperation } from 'blitzapi/observability/flow';
+import { trackOperation } from 'ramapi/observability/flow';
 
 app.post('/process', async (ctx) => {
   const result = await trackOperation(
@@ -816,7 +816,7 @@ curl http://localhost:3000/flow/slow?limit=20
 Configure flow storage settings:
 
 ```typescript
-import { configureStorage } from 'blitzapi/observability/flow';
+import { configureStorage } from 'ramapi/observability/flow';
 
 configureStorage({
   flowMaxSize: 100,     // Maximum number of flows to store (default: 100)
@@ -863,7 +863,7 @@ slow: duration > 1000, // milliseconds
 Access flow data programmatically:
 
 ```typescript
-import { flowStorage } from 'blitzapi/observability/flow';
+import { flowStorage } from 'ramapi/observability/flow';
 
 // Get a specific flow
 const flow = flowStorage.get(traceId);
@@ -880,7 +880,7 @@ flowStorage.clear();
 Send flow data to external monitoring:
 
 ```typescript
-import { flowStorage } from 'blitzapi/observability/flow';
+import { flowStorage } from 'ramapi/observability/flow';
 
 // After each request, send slow flows to monitoring
 app.use(async (ctx, next) => {
@@ -907,7 +907,7 @@ app.use(async (ctx, next) => {
 Generate custom visualizations using flow data:
 
 ```typescript
-import { generateWaterfall, generateMermaidDiagram } from 'blitzapi/observability/flow';
+import { generateWaterfall, generateMermaidDiagram } from 'ramapi/observability/flow';
 
 app.get('/custom-report/:traceId', async (ctx) => {
   const flow = flowStorage.get(ctx.params.traceId);
@@ -1156,7 +1156,7 @@ A: Colors are currently hardcoded. You can modify the colors in `src/observabili
 
 **Q: Does this work with GraphQL/gRPC?**
 
-A: Yes! Flow tracking works with all protocols supported by BlitzAPI (REST, GraphQL, gRPC).
+A: Yes! Flow tracking works with all protocols supported by RamAPI (REST, GraphQL, gRPC).
 
 ---
 
@@ -1168,4 +1168,4 @@ A: Yes! Flow tracking works with all protocols supported by BlitzAPI (REST, Grap
 
 ---
 
-**Need help?** Open an issue on [GitHub](https://github.com/blitzapi/blitzapi/issues)
+**Need help?** Open an issue on [GitHub](https://github.com/ramapi/ramapi/issues)

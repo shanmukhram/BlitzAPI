@@ -43,13 +43,13 @@ export function createTraceContext(
   operationName: string,
   attributes?: Record<string, any>
 ): TraceContext {
-  const tracer = trace.getTracer('blitzapi');
+  const tracer = trace.getTracer('ramapi');
 
   // Start root span
   const span = tracer.startSpan(operationName, {
     kind: SpanKind.SERVER,
     attributes: {
-      'blitzapi.protocol': protocol,
+      'ramapi.protocol': protocol,
       ...attributes,
     },
   });
@@ -80,7 +80,7 @@ export function startSpan(
 
   if (!context) {
     // Return no-op span if no trace context (observability disabled)
-    return trace.getTracer('blitzapi').startSpan(name);
+    return trace.getTracer('ramapi').startSpan(name);
   }
 
   // Use tracer from context (FAST - no lookup)

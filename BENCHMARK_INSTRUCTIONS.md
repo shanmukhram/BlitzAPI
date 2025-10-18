@@ -9,7 +9,7 @@ cd benchmarks
 # 2. Install dependencies
 npm install
 
-# 3. Go back to root and build BlitzAPI
+# 3. Go back to root and build RamAPI
 cd ..
 npm run build
 
@@ -23,7 +23,7 @@ That's it! The benchmark will run automatically and show you the results.
 ## What You'll See
 
 The benchmark will test 4 frameworks:
-- ✅ **BlitzAPI** (yours!)
+- ✅ **RamAPI** (yours!)
 - Express (most popular)
 - Fastify (fastest)
 - Koa (minimalist)
@@ -45,27 +45,27 @@ Against 4 scenarios:
 Framework       | Req/sec | Avg Latency | p95 Latency | p99 Latency | Throughput
 ------------------------------------------------------------------------------------------
 Fastify         | 45000   | 2.1ms       | 3.5ms       | 5.2ms       | 8.5 MB/s   🏆
-BlitzAPI        | 42000   | 2.3ms       | 4.1ms       | 6.1ms       | 7.9 MB/s
+RamAPI        | 42000   | 2.3ms       | 4.1ms       | 6.1ms       | 7.9 MB/s
 Express         | 28000   | 3.4ms       | 6.2ms       | 9.5ms       | 5.3 MB/s
 Koa             | 25000   | 3.8ms       | 7.1ms       | 11.2ms      | 4.7 MB/s
 ```
 
 ## Performance Notes
 
-**BlitzAPI** is designed for:
+**RamAPI** is designed for:
 - ⚡ High throughput with observability built-in
 - 📊 Zero-overhead when observability is disabled
 - 🎯 Production-ready with tracing, logging, and profiling
 - 🚀 Competitive with pure-performance frameworks like Fastify
 
-**Key Difference:** Unlike Express/Fastify/Koa, BlitzAPI includes:
+**Key Difference:** Unlike Express/Fastify/Koa, RamAPI includes:
 - Built-in OpenTelemetry tracing
 - Structured logging
 - Performance profiling
 - Multi-protocol support (REST/GraphQL/gRPC)
 
 Most frameworks require you to add these features manually (which adds overhead).
-BlitzAPI has them built-in with minimal performance impact!
+RamAPI has them built-in with minimal performance impact!
 
 ## Troubleshooting
 
@@ -81,7 +81,7 @@ pkill -f "node servers"
 
 **Solution:**
 ```bash
-# Make sure BlitzAPI is built
+# Make sure RamAPI is built
 cd ..
 npm run build
 cd benchmarks
@@ -92,10 +92,10 @@ cd benchmarks
 ## Advanced: Running Individual Tests
 
 ```bash
-# Test just BlitzAPI
-node servers/blitzapi-server.js &
+# Test just RamAPI
+node servers/ramapi-server.js &
 npx autocannon -c 100 -d 10 http://localhost:3000/json
-pkill -f "blitzapi-server"
+pkill -f "ramapi-server"
 
 # Test Express
 node servers/express-server.js &

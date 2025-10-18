@@ -1,7 +1,7 @@
-BlitzAPI Project Structure
+RamAPI Project Structure
 ==========================
 
-📦 BlitzAPI/
+📦 RamAPI/
 │
 ├── 📁 src/                          # Source code
 │   ├── 📁 core/                     # Core framework

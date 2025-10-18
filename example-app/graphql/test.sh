@@ -3,7 +3,7 @@
 
 BASE_URL="http://localhost:3000"
 
-echo "🧪 Testing BlitzAPI GraphQL Example"
+echo "🧪 Testing RamAPI GraphQL Example"
 echo "===================================="
 echo ""
 

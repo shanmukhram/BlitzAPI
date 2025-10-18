@@ -25,7 +25,7 @@ console.log('The issue must be elsewhere.');
 console.log('\nLet me check HOW MANY function calls we make...\n');
 
 // Our path:
-console.log('BlitzAPI path:');
+console.log('RamAPI path:');
 console.log('1. HTTP Server');
 console.log('2. createContext() - creates ctx object');
 console.log('3. handleRequest(ctx)');

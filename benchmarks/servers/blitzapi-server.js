@@ -40,5 +40,5 @@ app.get('/search', async (ctx) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`BlitzAPI listening on port ${PORT}`);
+  console.log(`RamAPI listening on port ${PORT}`);
 });

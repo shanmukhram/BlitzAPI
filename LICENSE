@@ -1,6 +1,6 @@
 MIT License with Attribution Requirements
 
-Copyright (c) 2025 BlitzAPI
+Copyright (c) 2025 RamAPI
 Created by Shanmukh Ram
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,10 +20,10 @@ furnished to do so, subject to the following conditions:
    - In the project's package.json or equivalent dependency file
 
    The acknowledgment must include:
-   "Built with BlitzAPI - https://github.com/shanmukhram/BlitzAPI"
+   "Built with RamAPI - https://github.com/shanmukhram/RamAPI"
 
 3. GitHub Recognition: Users are strongly encouraged (though not legally required)
-   to star the BlitzAPI repository on GitHub as a way to show support and help
+   to star the RamAPI repository on GitHub as a way to show support and help
    the project grow.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -41,18 +41,18 @@ ATTRIBUTION EXAMPLES:
 For README.md:
 ```markdown
 ## Built With
-- [BlitzAPI](https://github.com/shanmukhram/BlitzAPI) - Ultra-fast, secure, and observable API framework
+- [RamAPI](https://github.com/shanmukhram/RamAPI) - Ultra-fast, secure, and observable API framework
 ```
 
 For package.json:
 ```json
 {
   "credits": {
-    "framework": "BlitzAPI - https://github.com/shanmukhram/BlitzAPI"
+    "framework": "RamAPI - https://github.com/shanmukhram/RamAPI"
   }
 }
 ```
 
 For Application Credits:
-"This application is built with BlitzAPI, an ultra-fast API framework.
-Learn more at https://github.com/shanmukhram/BlitzAPI"
+"This application is built with RamAPI, an ultra-fast API framework.
+Learn more at https://github.com/shanmukhram/RamAPI"

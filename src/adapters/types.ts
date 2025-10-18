@@ -28,7 +28,7 @@ export type RequestHandler = (
  * Server Adapter Interface
  *
  * Abstracts the underlying HTTP server implementation (Node.js http, uWebSockets.js, etc.)
- * Allows BlitzAPI to work with different server backends without changing core logic
+ * Allows RamAPI to work with different server backends without changing core logic
  */
 export interface ServerAdapter {
   /**

@@ -5,7 +5,7 @@ import type { Span } from '@opentelemetry/api';
 import type { AdapterConfig } from '../adapters/types.js';
 
 /**
- * HTTP Methods supported by BlitzAPI
+ * HTTP Methods supported by RamAPI
  */
 export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD';
 

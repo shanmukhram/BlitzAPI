@@ -9,7 +9,7 @@ import type {
  * Node.js HTTP Adapter
  *
  * Wraps the standard Node.js http module as a ServerAdapter
- * This is the default adapter for BlitzAPI
+ * This is the default adapter for RamAPI
  *
  * Performance characteristics:
  * - Battle-tested and stable
@@ -56,7 +56,7 @@ export class NodeHTTPAdapter implements ServerAdapter {
           info,
         };
 
-        // Call BlitzAPI handler
+        // Call RamAPI handler
         const responseData = await this.requestHandler!(info, raw);
 
         // Send response
@@ -74,7 +74,7 @@ export class NodeHTTPAdapter implements ServerAdapter {
 
     return new Promise((resolve) => {
       this.server!.listen(port, host, () => {
-        console.log(`🚀 BlitzAPI server (${this.name}) running at http://${host}:${port}`);
+        console.log(`🚀 RamAPI server (${this.name}) running at http://${host}:${port}`);
         resolve();
       });
     });
@@ -93,7 +93,7 @@ export class NodeHTTPAdapter implements ServerAdapter {
         if (err) {
           reject(err);
         } else {
-          console.log('🛑 BlitzAPI server stopped');
+          console.log('🛑 RamAPI server stopped');
           resolve();
         }
       });

@@ -23,7 +23,7 @@ export async function loadProtoRuntime(
   const protoContent = buildProtoFile(packageName, serviceName, operations);
 
   // Write to temporary file
-  const tempDir = join(tmpdir(), 'blitzapi-protos');
+  const tempDir = join(tmpdir(), 'ramapi-protos');
   if (!existsSync(tempDir)) {
     mkdirSync(tempDir, { recursive: true });
   }

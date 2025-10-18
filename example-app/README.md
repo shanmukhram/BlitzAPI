@@ -1,6 +1,6 @@
-# BlitzAPI Examples
+# RamAPI Examples
 
-This directory contains comprehensive examples demonstrating all features of BlitzAPI.
+This directory contains comprehensive examples demonstrating all features of RamAPI.
 
 ## Structure
 
@@ -88,7 +88,7 @@ Features demonstrated:
 
 ### Building for Production
 
-BlitzAPI uses a hybrid approach for gRPC proto files:
+RamAPI uses a hybrid approach for gRPC proto files:
 
 1. **Build TypeScript and compile proto files:**
 ```bash
@@ -98,7 +98,7 @@ npm run build:protos
 This will:
 - Compile TypeScript to `dist/`
 - Generate proto files from your Zod schemas
-- Pre-compile protos to `.blitzapi/protos/*.compiled.json`
+- Pre-compile protos to `.ramapi/protos/*.compiled.json`
 
 2. **Deploy with NODE_ENV=production:**
 ```bash
@@ -123,7 +123,7 @@ In production mode:
   run: npm start
 ```
 
-**Note:** The `.blitzapi/` directory is gitignored but should be included in your deployment artifacts.
+**Note:** The `.ramapi/` directory is gitignored but should be included in your deployment artifacts.
 
 ## Testing
 

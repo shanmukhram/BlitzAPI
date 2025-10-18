@@ -12,7 +12,7 @@ import { initializeProfiling, profilingMiddleware } from '../observability/profi
 import { createAdapter, type ServerAdapter } from '../adapters/index.js';
 
 /**
- * BlitzAPI Server - The core HTTP server
+ * RamAPI Server - The core HTTP server
  * Handles incoming requests and routes them through middleware and handlers
  *
  * Phase 3.3: Multiple HTTP adapters (Node.js http, uWebSockets.js)
@@ -252,7 +252,7 @@ export class Server {
 
     return new Promise((resolve) => {
       this.httpServer!.listen(serverPort, serverHost, async () => {
-        console.log(`🚀 BlitzAPI server running at http://${serverHost}:${serverPort}`);
+        console.log(`🚀 RamAPI server running at http://${serverHost}:${serverPort}`);
 
         // Start gRPC server if configured
         if (this.protocolManager) {
@@ -284,7 +284,7 @@ export class Server {
           ctx.body = await this.adapter!.parseBody(rawRequest);
         }
 
-        // Handle request through BlitzAPI
+        // Handle request through RamAPI
         await this.handleRequest(ctx);
 
         // Return response data to adapter
@@ -351,7 +351,7 @@ export class Server {
         if (err) {
           reject(err);
         } else {
-          console.log('🛑 BlitzAPI server stopped');
+          console.log('🛑 RamAPI server stopped');
           resolve();
         }
       });

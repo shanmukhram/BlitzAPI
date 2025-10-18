@@ -111,7 +111,7 @@ export class GraphQLAdapter implements ProtocolAdapter {
 <html>
 <head>
   <meta charset="utf-8">
-  <title>BlitzAPI GraphQL Playground</title>
+  <title>RamAPI GraphQL Playground</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/graphql-playground-react/build/static/css/index.css" />
   <script src="https://cdn.jsdelivr.net/npm/graphql-playground-react/build/static/js/middleware.js"></script>
 </head>

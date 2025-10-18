@@ -1,6 +1,6 @@
 # Flow Visualization Examples
 
-This directory contains practical examples demonstrating BlitzAPI's Request Flow Visualization feature.
+This directory contains practical examples demonstrating RamAPI's Request Flow Visualization feature.
 
 ## Examples
 

@@ -1,6 +1,6 @@
 # Multi-Protocol Example
 
-The ultimate demonstration of BlitzAPI's power: **One codebase, three protocols!**
+The ultimate demonstration of RamAPI's power: **One codebase, three protocols!**
 
 ## What This Demonstrates
 

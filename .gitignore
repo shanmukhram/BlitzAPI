@@ -39,4 +39,4 @@ temp/
 *.tmp
 
 # Generated proto files (can be rebuilt with npm run build:protos)
-.blitzapi/
+.ramapi/

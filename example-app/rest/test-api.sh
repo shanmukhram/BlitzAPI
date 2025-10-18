@@ -1,11 +1,11 @@
 #!/bin/bash
-# BlitzAPI Example Test Script
+# RamAPI Example Test Script
 # Tests all API endpoints
 
 BASE_URL="http://localhost:3000"
 TOKEN=""
 
-echo "🧪 Testing BlitzAPI Example Server"
+echo "🧪 Testing RamAPI Example Server"
 echo "=================================="
 echo ""
 
@@ -60,7 +60,7 @@ TODO_RESPONSE=$(curl -s -X POST "$BASE_URL/todos" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "Learn BlitzAPI"
+    "title": "Learn RamAPI"
   }')
 
 echo "$TODO_RESPONSE" | jq '.'
@@ -86,7 +86,7 @@ curl -s -X PATCH "$BASE_URL/todos/$TODO_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "completed": true,
-    "title": "Learned BlitzAPI!"
+    "title": "Learned RamAPI!"
   }' | jq '.'
 echo ""
 

@@ -1,5 +1,5 @@
 /**
- * BlitzAPI vs Express vs Fastify vs Koa Benchmark
+ * RamAPI vs Express vs Fastify vs Koa Benchmark
  *
  * Tests:
  * 1. Simple JSON response
@@ -23,7 +23,7 @@ const CONNECTIONS = 100;
 const PIPELINING = 10;
 
 const frameworks = [
-  { name: 'BlitzAPI', file: 'servers/blitzapi-server.js', port: 3000 },
+  { name: 'RamAPI', file: 'servers/ramapi-server.js', port: 3000 },
   { name: 'Express', file: 'servers/express-server.js', port: 3001 },
   { name: 'Fastify', file: 'servers/fastify-server.js', port: 3002 },
   { name: 'Koa', file: 'servers/koa-server.js', port: 3003 },
@@ -99,7 +99,7 @@ async function waitForServer(port, maxAttempts = 20) {
 // Helper to start server
 function startServer(framework) {
   return new Promise(async (resolve, reject) => {
-    // Skip spawning if marked (e.g., BlitzAPI must be started manually)
+    // Skip spawning if marked (e.g., RamAPI must be started manually)
     if (framework.skipSpawn) {
       console.log(`Checking ${framework.name} server on port ${framework.port} (must be started manually)...`);
       const isReady = await waitForServer(framework.port, 5);
@@ -126,10 +126,10 @@ function startServer(framework) {
     const serverPath = join(__dirname, framework.file);
     const serverDir = dirname(serverPath);
 
-    // BlitzAPI uses uWebSockets which needs 'inherit' stdio to work properly
-    const useInheritStdio = framework.name === 'BlitzAPI';
+    // RamAPI uses uWebSockets which needs 'inherit' stdio to work properly
+    const useInheritStdio = framework.name === 'RamAPI';
 
-    // Don't change cwd for BlitzAPI - it causes issues with uWebSockets
+    // Don't change cwd for RamAPI - it causes issues with uWebSockets
     const spawnOptions = {
       stdio: useInheritStdio ? 'inherit' : ['ignore', 'pipe', 'pipe'],
       env: { ...process.env, PORT: framework.port }
@@ -412,7 +412,7 @@ async function cleanupPorts() {
 
 // Main
 async function main() {
-  console.log('🚀 BlitzAPI Benchmark Suite');
+  console.log('🚀 RamAPI Benchmark Suite');
   console.log('='.repeat(100));
   console.log(`Duration: ${DURATION}s | Connections: ${CONNECTIONS} | Pipelining: ${PIPELINING}`);
   console.log(`Node version: ${process.version}\n`);

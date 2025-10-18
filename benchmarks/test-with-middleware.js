@@ -14,7 +14,7 @@ const CONNECTIONS = 100;
 const PIPELINING = 10;
 
 const frameworks = [
-  { name: 'BlitzAPI', file: 'servers/blitzapi-server.js', port: 3000 },
+  { name: 'RamAPI', file: 'servers/ramapi-server.js', port: 3000 },
   { name: 'Fastify', file: 'servers/fastify-server.js', port: 3002 },
   { name: 'Koa', file: 'servers/koa-server.js', port: 3003 },
 ];

@@ -1,5 +1,5 @@
 /**
- * BlitzAPI gRPC Example
+ * RamAPI gRPC Example
  * Demonstrates gRPC protocol support
  */
 
@@ -150,7 +150,7 @@ for (const operation of operations) {
 
 const grpcAdapter = protocolManager?.getGRPCAdapter();
 if (grpcAdapter) {
-  const protoContent = grpcAdapter.getProtoFile('blitzapi.users', 'UserService');
+  const protoContent = grpcAdapter.getProtoFile('ramapi.users', 'UserService');
 
   console.log('📝 Generated Protocol Buffer Definition:');
   console.log('='.repeat(60));

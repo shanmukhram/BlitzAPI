@@ -1,6 +1,6 @@
-# BlitzAPI Benchmark Suite
+# RamAPI Benchmark Suite
 
-Compare BlitzAPI performance against Express, Fastify, and Koa.
+Compare RamAPI performance against Express, Fastify, and Koa.
 
 ## Setup
 
@@ -16,7 +16,7 @@ npm run bench
 ```
 
 This will:
-1. Start all 4 framework servers (BlitzAPI, Express, Fastify, Koa)
+1. Start all 4 framework servers (RamAPI, Express, Fastify, Koa)
 2. Run 4 different tests on each framework
 3. Display comparative results
 4. Cleanup automatically
@@ -37,7 +37,7 @@ Edit `benchmark.js` to adjust:
 
 ## Expected Results
 
-BlitzAPI is optimized for:
+RamAPI is optimized for:
 - Zero-copy request handling
 - Minimal middleware overhead
 - Fast route matching
@@ -53,8 +53,8 @@ Typical performance (your results may vary):
 You can also test individually:
 
 ```bash
-# Terminal 1 - Start BlitzAPI
-node servers/blitzapi-server.js
+# Terminal 1 - Start RamAPI
+node servers/ramapi-server.js
 
 # Terminal 2 - Benchmark
 npx autocannon -c 100 -d 10 http://localhost:3000/json

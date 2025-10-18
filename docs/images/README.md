@@ -8,12 +8,12 @@ This directory contains images used in the documentation.
 
 **Location:** `docs/images/flow-visualization-diagram.png`
 
-**Description:** Sequence diagram showing a complete request flow through BlitzAPI with the following components:
+**Description:** Sequence diagram showing a complete request flow through RamAPI with the following components:
 
-- Client → BlitzAPI
-- BlitzAPI → Database
-- BlitzAPI → ExternalAPI
-- BlitzAPI → Cache
+- Client → RamAPI
+- RamAPI → Database
+- RamAPI → ExternalAPI
+- RamAPI → Cache
 
 **Flow shown:**
 1. Client sends `GET /users/123` request

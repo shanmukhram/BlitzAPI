@@ -7,7 +7,7 @@ import type { Context } from '../core/types.js';
 import type { ZodSchema } from 'zod';
 
 /**
- * Protocol types supported by BlitzAPI
+ * Protocol types supported by RamAPI
  */
 export type Protocol = 'REST' | 'GraphQL' | 'gRPC';
 

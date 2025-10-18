@@ -1,7 +1,7 @@
 /**
- * BlitzAPI Example - Node.js HTTP Adapter
+ * RamAPI Example - Node.js HTTP Adapter
  *
- * This example demonstrates using BlitzAPI with the Node.js HTTP adapter.
+ * This example demonstrates using RamAPI with the Node.js HTTP adapter.
  * This is the default adapter with maximum ecosystem compatibility.
  *
  * Performance characteristics:
@@ -29,7 +29,7 @@ const app = createApp({
 // Simple route
 app.get('/', (ctx) => {
   ctx.json({
-    message: 'Hello from BlitzAPI with Node.js HTTP adapter!',
+    message: 'Hello from RamAPI with Node.js HTTP adapter!',
     adapter: 'node-http',
     features: [
       'Battle-tested',

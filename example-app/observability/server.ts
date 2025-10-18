@@ -1,5 +1,5 @@
 /**
- * BlitzAPI Observability Example
+ * RamAPI Observability Example
  * Demonstrates CORE USP: Best-in-class tracing, logging, and metrics
  *
  * Run in DEV:  npm run example:observability
@@ -22,7 +22,7 @@ const app = createApp({
     // Tracing configuration
     tracing: {
       enabled: true,
-      serviceName: 'blitzapi-demo',
+      serviceName: 'ramapi-demo',
       serviceVersion: '1.0.0',
       exporter: 'console',  // Use 'console' for demo (in prod: 'otlp')
       sampleRate: 1.0,      // 100% sampling for demo
@@ -36,7 +36,7 @@ const app = createApp({
       spanNaming: 'http.route',
       defaultAttributes: {
         'service.environment': process.env.NODE_ENV || 'development',
-        'service.team': 'blitzapi',
+        'service.team': 'ramapi',
       },
     },
 
@@ -53,7 +53,7 @@ const app = createApp({
     metrics: {
       enabled: true,
       collectInterval: 60000,  // 1 minute
-      prefix: 'blitzapi_demo',
+      prefix: 'ramapi_demo',
     },
   },
 });
@@ -67,7 +67,7 @@ app.get('/hello', async (ctx) => {
   logger.info('Hello endpoint called', { user: 'demo' });
 
   ctx.json({
-    message: 'Hello, BlitzAPI!',
+    message: 'Hello, RamAPI!',
     traceId: ctx.trace?.traceId,
   });
 });
@@ -296,7 +296,7 @@ const PORT = 3000;
 
 app.listen(PORT, '0.0.0.0').then(() => {
   console.log('');
-  console.log('🔍 BlitzAPI Observability Demo');
+  console.log('🔍 RamAPI Observability Demo');
   console.log('='.repeat(60));
   console.log('');
   console.log(`Mode: ${process.env.NODE_ENV || 'development'}`);

@@ -1,5 +1,5 @@
 {
-  "name": "blitzapi",
+  "name": "ramapi",
   "version": "0.1.0",
   "description": "Ultra-fast, secure, and observable API framework for modern applications",
   "type": "module",
@@ -64,12 +64,12 @@
   "author": "Shanmukh Ram <bunny@syntaxsarcasm.world>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shanmukhram/BlitzAPI.git"
+    "url": "https://github.com/shanmukhram/RamAPI.git"
   },
   "bugs": {
-    "url": "https://github.com/shanmukhram/BlitzAPI/issues"
+    "url": "https://github.com/shanmukhram/RamAPI/issues"
   },
-  "homepage": "https://github.com/shanmukhram/BlitzAPI#readme",
+  "homepage": "https://github.com/shanmukhram/RamAPI#readme",
   "license": "MIT",
   "dependencies": {
     "@grpc/grpc-js": "^1.9.14",

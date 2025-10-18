@@ -1,5 +1,5 @@
 /**
- * BlitzAPI Adapter Comparison Benchmark
+ * RamAPI Adapter Comparison Benchmark
  *
  * Compares performance between Node.js HTTP adapter and uWebSockets.js adapter
  *
@@ -255,7 +255,7 @@ function printResults(results) {
 async function main() {
   console.log('');
   console.log('═══════════════════════════════════════════════════════════════');
-  console.log('       BlitzAPI Adapter Comparison Benchmark                   ');
+  console.log('       RamAPI Adapter Comparison Benchmark                   ');
   console.log('═══════════════════════════════════════════════════════════════');
   console.log('');
   console.log(`Duration: ${DURATION}s per endpoint`);

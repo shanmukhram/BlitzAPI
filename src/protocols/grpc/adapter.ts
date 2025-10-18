@@ -110,7 +110,7 @@ export class GRPCAdapter implements ProtocolAdapter {
 
       // HYBRID APPROACH: Choose proto loading strategy based on environment
       let serviceDefinition: ServiceDefinition;
-      const packageName = service.package || 'blitzapi';
+      const packageName = service.package || 'ramapi';
 
       if (isDevelopment) {
         // DEV MODE: Runtime proto loading (automatic, convenient for development)
@@ -175,7 +175,7 @@ export class GRPCAdapter implements ProtocolAdapter {
    * This should be called during npm run build:protos
    */
   async compileForProduction(
-    outputDir: string = join(process.cwd(), '.blitzapi', 'protos')
+    outputDir: string = join(process.cwd(), '.ramapi', 'protos')
   ): Promise<void> {
     console.log('');
     console.log('🔨 Building gRPC proto files for production...');
@@ -184,7 +184,7 @@ export class GRPCAdapter implements ProtocolAdapter {
     for (const [, service] of this.services) {
       if (service.methods.size === 0) continue;
 
-      const packageName = service.package || 'blitzapi';
+      const packageName = service.package || 'ramapi';
       const serviceOps = this.operations.filter(op => op.grpc?.service === service.name);
 
       await generateAndCompileProto(

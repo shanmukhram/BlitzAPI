@@ -1,7 +1,7 @@
 /**
- * BlitzAPI Example - uWebSockets.js Adapter
+ * RamAPI Example - uWebSockets.js Adapter
  *
- * This example demonstrates using BlitzAPI with the uWebSockets.js adapter
+ * This example demonstrates using RamAPI with the uWebSockets.js adapter
  * for ultra-high performance (2-3x faster than Node.js http).
  *
  * Performance characteristics:
@@ -40,7 +40,7 @@ const app = createApp({
 // Simple route
 app.get('/', (ctx) => {
   ctx.json({
-    message: 'Hello from BlitzAPI with uWebSockets.js adapter!',
+    message: 'Hello from RamAPI with uWebSockets.js adapter!',
     adapter: 'uwebsockets',
     features: [
       'Ultra-fast (2-3x Node.js)',

@@ -39,7 +39,7 @@ export function initializeTracing(config: ObservabilityConfig = {}): void {
   // Store config for runtime access
   tracingConfig = {
     enabled: true,
-    serviceName: config.tracing?.serviceName || 'blitzapi',
+    serviceName: config.tracing?.serviceName || 'ramapi',
     serviceVersion: config.tracing?.serviceVersion || '0.1.0',
     exporter: config.tracing?.exporter || 'console',
     endpoint: config.tracing?.endpoint || 'http://localhost:4318/v1/traces',

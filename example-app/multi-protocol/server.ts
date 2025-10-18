@@ -1,5 +1,5 @@
 /**
- * BlitzAPI Multi-Protocol Example
+ * RamAPI Multi-Protocol Example
  * Single API supporting REST, GraphQL, and gRPC simultaneously!
  */
 

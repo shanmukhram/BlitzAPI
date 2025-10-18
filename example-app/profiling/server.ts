@@ -13,7 +13,7 @@ const app = createApp({
     // Tracing (Phase 3.0)
     tracing: {
       enabled: true,
-      serviceName: 'blitzapi-profiling-demo',
+      serviceName: 'ramapi-profiling-demo',
       serviceVersion: '1.0.0',
       exporter: 'console',
       sampleRate: 1.0,
@@ -30,7 +30,7 @@ const app = createApp({
     metrics: {
       enabled: true,
       collectInterval: 60000,
-      prefix: 'blitzapi_profiling',
+      prefix: 'ramapi_profiling',
     },
 
     // ⭐ NEW: Profiling (Phase 3.1)
@@ -201,7 +201,7 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log('');
-  console.log('🔍 BlitzAPI Performance Profiling Demo');
+  console.log('🔍 RamAPI Performance Profiling Demo');
   console.log('============================================================');
   console.log('');
   console.log(`Mode: ${process.env.NODE_ENV || 'development'}`);

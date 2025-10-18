@@ -128,7 +128,7 @@ export class UWebSocketsAdapter implements ServerAdapter {
           aborted: () => aborted,
         };
 
-        // Call BlitzAPI handler
+        // Call RamAPI handler
         const responseData = await this.requestHandler!(info, raw);
 
         // Send response if not aborted
@@ -156,7 +156,7 @@ export class UWebSocketsAdapter implements ServerAdapter {
         this.app!.listen(listenHost, port, this.uws.LIBUS_LISTEN_EXCLUSIVE_PORT, (listenSocket: any) => {
           if (listenSocket) {
             this.listenSocket = listenSocket;
-            console.log(`🚀 BlitzAPI server (${this.name}) running at http://${host}:${port}`);
+            console.log(`🚀 RamAPI server (${this.name}) running at http://${host}:${port}`);
             resolve();
           } else {
             // Failed - maybe try without the flag
@@ -164,7 +164,7 @@ export class UWebSocketsAdapter implements ServerAdapter {
             this.app!.listen(port, (retrySocket: any) => {
               if (retrySocket) {
                 this.listenSocket = retrySocket;
-                console.log(`🚀 BlitzAPI server (${this.name}) running at http://${host}:${port}`);
+                console.log(`🚀 RamAPI server (${this.name}) running at http://${host}:${port}`);
                 resolve();
               } else {
                 reject(new Error(`Failed to listen on port ${port}`));
@@ -185,7 +185,7 @@ export class UWebSocketsAdapter implements ServerAdapter {
     if (this.listenSocket) {
       this.uws.us_listen_socket_close(this.listenSocket);
       this.listenSocket = null;
-      console.log('🛑 BlitzAPI server stopped');
+      console.log('🛑 RamAPI server stopped');
     }
   }
 

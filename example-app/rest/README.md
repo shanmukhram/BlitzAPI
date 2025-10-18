@@ -1,6 +1,6 @@
 # REST API Example
 
-A complete REST API demonstrating Phase 1 features of BlitzAPI.
+A complete REST API demonstrating Phase 1 features of RamAPI.
 
 ## Features
 
@@ -42,7 +42,7 @@ curl -X POST http://localhost:3000/auth/login \
 curl -X POST http://localhost:3000/todos \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"title":"Learn BlitzAPI"}'
+  -d '{"title":"Learn RamAPI"}'
 ```
 
 ## API Endpoints

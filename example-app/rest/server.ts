@@ -1,5 +1,5 @@
 /**
- * BlitzAPI Example Application
+ * RamAPI Example Application
  * Demonstrates all Phase 1 features:
  * - Core HTTP server with routing
  * - Middleware system
@@ -102,7 +102,7 @@ const todoParamsSchema = z.object({
 // Health check
 app.get('/', async (ctx) => {
   ctx.json({
-    message: 'BlitzAPI Example Server',
+    message: 'RamAPI Example Server',
     version: '0.1.0',
     timestamp: new Date().toISOString(),
     endpoints: {

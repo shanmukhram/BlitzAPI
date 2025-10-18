@@ -1,10 +1,10 @@
-# BlitzAPI ⚡
+# RamAPI ⚡
 
 > Ultra-fast, secure, and observable API framework for modern applications
 
-BlitzAPI is a next-generation TypeScript API framework that addresses critical bottlenecks in modern application development. Built from the ground up with performance, security, and developer experience in mind.
+RamAPI is a next-generation TypeScript API framework that addresses critical bottlenecks in modern application development. Built from the ground up with performance, security, and developer experience in mind.
 
-## Why BlitzAPI?
+## Why RamAPI?
 
 Current API frameworks fall short in addressing modern challenges:
 
@@ -15,7 +15,7 @@ Current API frameworks fall short in addressing modern challenges:
 - ❌ Complex middleware composition
 - ❌ Weak type safety at runtime
 
-BlitzAPI solves these problems:
+RamAPI solves these problems:
 
 - ✅ **Ultra-fast** - 124k-350k req/s with smart HTTP adapter selection (2-3x faster than alternatives)
 - ✅ **Type-safe** - End-to-end TypeScript with runtime validation
@@ -55,18 +55,18 @@ BlitzAPI solves these problems:
 ### Installation
 
 ```bash
-npm install blitzapi zod
+npm install ramapi zod
 ```
 
 ### Hello World
 
 ```typescript
-import { createApp } from 'blitzapi';
+import { createApp } from 'ramapi';
 
 const app = createApp();
 
 app.get('/', async (ctx) => {
-  ctx.json({ message: 'Hello, BlitzAPI!' });
+  ctx.json({ message: 'Hello, RamAPI!' });
 });
 
 app.listen(3000);
@@ -75,7 +75,7 @@ app.listen(3000);
 ### With Validation
 
 ```typescript
-import { createApp, validate } from 'blitzapi';
+import { createApp, validate } from 'ramapi';
 import { z } from 'zod';
 
 const app = createApp();
@@ -102,7 +102,7 @@ app.listen(3000);
 ### With Authentication
 
 ```typescript
-import { createApp, JWTService, authenticate, validate } from 'blitzapi';
+import { createApp, JWTService, authenticate, validate } from 'ramapi';
 import { z } from 'zod';
 
 const app = createApp();
@@ -168,7 +168,7 @@ app.get('/users/:id', async (ctx) => {
 Middleware functions can transform context and control flow:
 
 ```typescript
-import { Middleware } from 'blitzapi';
+import { Middleware } from 'ramapi';
 
 const timing: Middleware = async (ctx, next) => {
   const start = Date.now();
@@ -208,7 +208,7 @@ Use Zod schemas for type-safe validation:
 
 ```typescript
 import { z } from 'zod';
-import { validate } from 'blitzapi';
+import { validate } from 'ramapi';
 
 const querySchema = z.object({
   page: z.string().regex(/^\d+$/).transform(Number).default('1'),
@@ -237,7 +237,7 @@ app.get('/items/:id',
 Throw errors with status codes:
 
 ```typescript
-import { HTTPError } from 'blitzapi';
+import { HTTPError } from 'ramapi';
 
 app.get('/users/:id', async (ctx) => {
   const user = await db.findUser(ctx.params.id);
@@ -271,7 +271,7 @@ const app = createApp({
 ### Logger
 
 ```typescript
-import { logger } from 'blitzapi';
+import { logger } from 'ramapi';
 
 app.use(logger());
 // Output: [200] GET /api/users - 15ms
@@ -280,7 +280,7 @@ app.use(logger());
 ### CORS
 
 ```typescript
-import { cors } from 'blitzapi';
+import { cors } from 'ramapi';
 
 app.use(cors({
   origin: ['https://example.com'],
@@ -292,7 +292,7 @@ app.use(cors({
 ### Rate Limiting
 
 ```typescript
-import { rateLimit } from 'blitzapi';
+import { rateLimit } from 'ramapi';
 
 // Global rate limit
 app.use(rateLimit({
@@ -310,7 +310,7 @@ app.post('/api/expensive',
 ### Authentication
 
 ```typescript
-import { JWTService, authenticate } from 'blitzapi';
+import { JWTService, authenticate } from 'ramapi';
 
 const jwt = new JWTService({
   secret: process.env.JWT_SECRET!,
@@ -333,7 +333,7 @@ app.get('/profile', async (ctx) => {
 ### Password Hashing
 
 ```typescript
-import { passwordService } from 'blitzapi';
+import { passwordService } from 'ramapi';
 
 // Hash password
 const hash = await passwordService.hash('password123');
@@ -344,7 +344,7 @@ const valid = await passwordService.verify('password123', hash);
 
 ## Observability & Performance
 
-BlitzAPI provides production-ready observability features out of the box:
+RamAPI provides production-ready observability features out of the box:
 
 ### Distributed Tracing
 
@@ -374,7 +374,7 @@ Visualize exactly how your requests flow through your application - see database
 
 **How it works:**
 
-The diagram above shows a complete request flow through BlitzAPI. Each operation is automatically tracked with precise timing:
+The diagram above shows a complete request flow through RamAPI. Each operation is automatically tracked with precise timing:
 
 1. **Routing** (3.2ms) - Request routing and validation
 2. **Validation** (8.5ms) - Request validation middleware
@@ -385,7 +385,7 @@ The diagram above shows a complete request flow through BlitzAPI. Each operation
 7. **Response** - Total request time: 245.8ms
 
 ```typescript
-import { flowTrackingMiddleware, trackDatabase, trackHTTP, trackCache } from 'blitzapi';
+import { flowTrackingMiddleware, trackDatabase, trackHTTP, trackCache } from 'ramapi';
 
 // Enable flow tracking
 app.use(flowTrackingMiddleware());
@@ -510,7 +510,7 @@ Test it:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    BlitzAPI Framework                     │
+│                    RamAPI Framework                     │
 ├─────────────────────────────────────────────────────────┤
 │                                                           │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
@@ -590,14 +590,14 @@ Test it:
 
 ## Performance Benchmarks
 
-BlitzAPI delivers exceptional performance with minimal overhead:
+RamAPI delivers exceptional performance with minimal overhead:
 
 ### 🚀 Benchmark Results (Simple JSON Response)
 
-| Framework | Requests/sec | Latency (avg) | vs BlitzAPI |
+| Framework | Requests/sec | Latency (avg) | vs RamAPI |
 |-----------|-------------|---------------|-------------|
-| **BlitzAPI (uWebSockets)** | **~350,000** | **0.28ms** | **Baseline** 🏆 |
-| **BlitzAPI (Node.js)** | **~124,000** | **0.80ms** | **Baseline** |
+| **RamAPI (uWebSockets)** | **~350,000** | **0.28ms** | **Baseline** 🏆 |
+| **RamAPI (Node.js)** | **~124,000** | **0.80ms** | **Baseline** |
 | Fastify | ~117,000 | 0.85ms | 6% slower |
 | Koa | ~136,000 | 0.73ms | 10% faster (minimal features) |
 | Express | ~33,000 | 3.03ms | 73% slower |
@@ -613,7 +613,7 @@ BlitzAPI delivers exceptional performance with minimal overhead:
 
 ### Running Benchmarks
 
-Compare BlitzAPI against Express, Fastify, Koa, Hapi, and Hyper-Express:
+Compare RamAPI against Express, Fastify, Koa, Hapi, and Hyper-Express:
 
 ```bash
 # Install dependencies
@@ -624,7 +624,7 @@ cd benchmarks
 npm install
 cd ..
 
-# Build BlitzAPI
+# Build RamAPI
 npm run build
 
 # Run comprehensive benchmark suite
@@ -648,7 +648,7 @@ See [benchmarks/README.md](./benchmarks/README.md) for detailed benchmark docume
 
 ## Contributing
 
-BlitzAPI is in active development. Contributions are welcome!
+RamAPI is in active development. Contributions are welcome!
 
 1. Fork the repository
 2. Create a feature branch
@@ -662,7 +662,7 @@ MIT License - see [LICENSE](./LICENSE) for details.
 
 ## Vision
 
-BlitzAPI aims to be the framework of choice for building modern, observable, secure APIs that seamlessly integrate with AI/LLM systems while maintaining excellent developer experience and performance.
+RamAPI aims to be the framework of choice for building modern, observable, secure APIs that seamlessly integrate with AI/LLM systems while maintaining excellent developer experience and performance.
 
 We're just getting started. Join us on this journey!
 

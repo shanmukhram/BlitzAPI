@@ -2,7 +2,7 @@
  * Server Adapters
  *
  * Adapters abstract the underlying HTTP server implementation,
- * allowing BlitzAPI to work with different server backends.
+ * allowing RamAPI to work with different server backends.
  *
  * Available adapters:
  * - node-http: Standard Node.js http module (default)

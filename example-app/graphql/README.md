@@ -1,6 +1,6 @@
 # GraphQL API Example
 
-A library management API demonstrating GraphQL support in BlitzAPI.
+A library management API demonstrating GraphQL support in RamAPI.
 
 ## Features
 

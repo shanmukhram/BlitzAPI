@@ -1,15 +1,15 @@
-# BlitzAPI Quick Reference
+# RamAPI Quick Reference
 
 ## Installation
 
 ```bash
-npm install blitzapi zod
+npm install ramapi zod
 ```
 
 ## Basic Server
 
 ```typescript
-import { createApp } from 'blitzapi';
+import { createApp } from 'ramapi';
 
 const app = createApp();
 
@@ -90,7 +90,7 @@ app.post('/api/data',
 
 ```typescript
 import { z } from 'zod';
-import { validate } from 'blitzapi';
+import { validate } from 'ramapi';
 
 const userSchema = z.object({
   name: z.string().min(2),
@@ -132,7 +132,7 @@ app.get('/items/:id',
 ## Authentication
 
 ```typescript
-import { JWTService, authenticate } from 'blitzapi';
+import { JWTService, authenticate } from 'ramapi';
 
 // Create JWT service
 const jwt = new JWTService({
@@ -159,7 +159,7 @@ app.get('/profile', async (ctx) => {
 ## Password Hashing
 
 ```typescript
-import { passwordService } from 'blitzapi';
+import { passwordService } from 'ramapi';
 
 // Hash password
 const hash = await passwordService.hash('password123');
@@ -193,7 +193,7 @@ app.get('/data', async (ctx) => {
 ## Error Handling
 
 ```typescript
-import { HTTPError } from 'blitzapi';
+import { HTTPError } from 'ramapi';
 
 app.get('/users/:id', async (ctx) => {
   const user = await db.findUser(ctx.params.id);
@@ -222,7 +222,7 @@ const app = createApp({
 ## CORS
 
 ```typescript
-import { cors } from 'blitzapi';
+import { cors } from 'ramapi';
 
 // Enable all origins
 app.use(cors());
@@ -243,7 +243,7 @@ app.use(cors({
 ## Rate Limiting
 
 ```typescript
-import { rateLimit } from 'blitzapi';
+import { rateLimit } from 'ramapi';
 
 // Global rate limit
 app.use(rateLimit({
@@ -261,7 +261,7 @@ app.post('/api/expensive',
 ## Logging
 
 ```typescript
-import { logger } from 'blitzapi';
+import { logger } from 'ramapi';
 
 app.use(logger());
 // Output: [200] GET /api/users - 15ms
@@ -297,7 +297,7 @@ interface Context {
 ## Custom Middleware
 
 ```typescript
-import { Middleware } from 'blitzapi';
+import { Middleware } from 'ramapi';
 
 const timing: Middleware = async (ctx, next) => {
   const start = Date.now();
@@ -399,7 +399,7 @@ app.post('/login',
 ## Full Example
 
 ```typescript
-import { createApp, logger, cors, validate, authenticate, JWTService } from 'blitzapi';
+import { createApp, logger, cors, validate, authenticate, JWTService } from 'ramapi';
 import { z } from 'zod';
 
 const app = createApp({

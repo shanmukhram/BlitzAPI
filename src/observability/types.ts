@@ -60,7 +60,7 @@ export interface MetricsConfig {
   enabled: boolean;
   collectInterval?: number;  // Collection interval in ms (default: 60000)
   endpoint?: string;         // Metrics push endpoint
-  prefix?: string;           // Metric name prefix (default: 'blitzapi')
+  prefix?: string;           // Metric name prefix (default: 'ramapi')
 }
 
 /**

@@ -1,5 +1,5 @@
 /**
- * BlitzAPI GraphQL Example
+ * RamAPI GraphQL Example
  * Demonstrates multi-protocol support with GraphQL
  */
 

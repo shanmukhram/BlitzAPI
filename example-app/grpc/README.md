@@ -1,6 +1,6 @@
 # gRPC API Example
 
-A user service demonstrating gRPC support in BlitzAPI.
+A user service demonstrating gRPC support in RamAPI.
 
 ## Features
 
@@ -8,7 +8,7 @@ A user service demonstrating gRPC support in BlitzAPI.
 - Protocol Buffers schema generation
 - Type-safe RPC calls
 - Error handling
-- Integration with BlitzAPI operations
+- Integration with RamAPI operations
 
 ## Running
 

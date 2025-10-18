@@ -1,7 +1,7 @@
 /**
- * BlitzAPI - Ultra-fast, secure, and observable API framework
+ * RamAPI - Ultra-fast, secure, and observable API framework
  *
- * @module blitzapi
+ * @module ramapi
  */
 
 // Core exports

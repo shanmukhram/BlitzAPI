@@ -41,7 +41,7 @@ let metricsConfig: {
 } = {
   enabled: true,
   collectInterval: 60000, // 1 minute
-  prefix: 'blitzapi',
+  prefix: 'ramapi',
 };
 
 /**
@@ -52,7 +52,7 @@ export function initializeMetrics(config?: MetricsConfig): void {
     enabled: config?.enabled !== false,
     collectInterval: config?.collectInterval || 60000,
     endpoint: config?.endpoint,
-    prefix: config?.prefix || 'blitzapi',
+    prefix: config?.prefix || 'ramapi',
   };
 
   if (metricsConfig.enabled) {
@@ -151,43 +151,43 @@ export function exportPrometheusMetrics(): string {
   const metrics = getMetrics();
 
   const lines: string[] = [
-    '# HELP blitzapi_requests_total Total number of requests',
-    '# TYPE blitzapi_requests_total counter',
-    `blitzapi_requests_total ${metrics.totalRequests}`,
+    '# HELP ramapi_requests_total Total number of requests',
+    '# TYPE ramapi_requests_total counter',
+    `ramapi_requests_total ${metrics.totalRequests}`,
     '',
-    '# HELP blitzapi_requests_per_second Requests per second',
-    '# TYPE blitzapi_requests_per_second gauge',
-    `blitzapi_requests_per_second ${metrics.requestsPerSecond.toFixed(2)}`,
+    '# HELP ramapi_requests_per_second Requests per second',
+    '# TYPE ramapi_requests_per_second gauge',
+    `ramapi_requests_per_second ${metrics.requestsPerSecond.toFixed(2)}`,
     '',
-    '# HELP blitzapi_latency_average_ms Average latency in milliseconds',
-    '# TYPE blitzapi_latency_average_ms gauge',
-    `blitzapi_latency_average_ms ${metrics.averageLatency.toFixed(2)}`,
+    '# HELP ramapi_latency_average_ms Average latency in milliseconds',
+    '# TYPE ramapi_latency_average_ms gauge',
+    `ramapi_latency_average_ms ${metrics.averageLatency.toFixed(2)}`,
     '',
-    '# HELP blitzapi_latency_p95_ms P95 latency in milliseconds',
-    '# TYPE blitzapi_latency_p95_ms gauge',
-    `blitzapi_latency_p95_ms ${metrics.p95Latency.toFixed(2)}`,
+    '# HELP ramapi_latency_p95_ms P95 latency in milliseconds',
+    '# TYPE ramapi_latency_p95_ms gauge',
+    `ramapi_latency_p95_ms ${metrics.p95Latency.toFixed(2)}`,
     '',
-    '# HELP blitzapi_latency_p99_ms P99 latency in milliseconds',
-    '# TYPE blitzapi_latency_p99_ms gauge',
-    `blitzapi_latency_p99_ms ${metrics.p99Latency.toFixed(2)}`,
+    '# HELP ramapi_latency_p99_ms P99 latency in milliseconds',
+    '# TYPE ramapi_latency_p99_ms gauge',
+    `ramapi_latency_p99_ms ${metrics.p99Latency.toFixed(2)}`,
     '',
-    '# HELP blitzapi_error_rate Error rate (5xx)',
-    '# TYPE blitzapi_error_rate gauge',
-    `blitzapi_error_rate ${metrics.errorRate.toFixed(4)}`,
+    '# HELP ramapi_error_rate Error rate (5xx)',
+    '# TYPE ramapi_error_rate gauge',
+    `ramapi_error_rate ${metrics.errorRate.toFixed(4)}`,
     '',
-    '# HELP blitzapi_requests_by_protocol Requests by protocol',
-    '# TYPE blitzapi_requests_by_protocol counter',
-    `blitzapi_requests_by_protocol{protocol="rest"} ${metrics.byProtocol.rest}`,
-    `blitzapi_requests_by_protocol{protocol="graphql"} ${metrics.byProtocol.graphql}`,
-    `blitzapi_requests_by_protocol{protocol="grpc"} ${metrics.byProtocol.grpc}`,
+    '# HELP ramapi_requests_by_protocol Requests by protocol',
+    '# TYPE ramapi_requests_by_protocol counter',
+    `ramapi_requests_by_protocol{protocol="rest"} ${metrics.byProtocol.rest}`,
+    `ramapi_requests_by_protocol{protocol="graphql"} ${metrics.byProtocol.graphql}`,
+    `ramapi_requests_by_protocol{protocol="grpc"} ${metrics.byProtocol.grpc}`,
     '',
   ];
 
   // Add status code metrics
-  lines.push('# HELP blitzapi_requests_by_status Requests by status code');
-  lines.push('# TYPE blitzapi_requests_by_status counter');
+  lines.push('# HELP ramapi_requests_by_status Requests by status code');
+  lines.push('# TYPE ramapi_requests_by_status counter');
   for (const [code, count] of Object.entries(metrics.byStatusCode)) {
-    lines.push(`blitzapi_requests_by_status{code="${code}"} ${count}`);
+    lines.push(`ramapi_requests_by_status{code="${code}"} ${count}`);
   }
 
   return lines.join('\n');

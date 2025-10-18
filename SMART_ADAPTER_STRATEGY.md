@@ -132,7 +132,7 @@ app.get('/api/users', (ctx) => {
 
 await app.listen(3000);
 // 🚀 Using uWebSockets adapter for maximum performance
-// 🚀 BlitzAPI server (uwebsockets) running at http://0.0.0.0:3000
+// 🚀 RamAPI server (uwebsockets) running at http://0.0.0.0:3000
 ```
 
 **Performance: ~350k req/s** ⚡
@@ -152,7 +152,7 @@ app.get('/api/users', (ctx) => {
 
 await app.listen(3000);
 // 🚀 Using uWebSockets adapter for maximum performance
-// 🚀 BlitzAPI server (uwebsockets) running at http://0.0.0.0:3000
+// 🚀 RamAPI server (uwebsockets) running at http://0.0.0.0:3000
 ```
 
 **Performance: ~350k req/s** ⚡
@@ -198,7 +198,7 @@ const app = createApp({
 
 await app.listen(3000);
 // 🚀 Using uWebSockets adapter for maximum performance
-// 🚀 BlitzAPI server (uwebsockets) running at http://0.0.0.0:3000
+// 🚀 RamAPI server (uwebsockets) running at http://0.0.0.0:3000
 // 🚀 GraphQL Playground: http://0.0.0.0:3000/graphql
 // 📡 gRPC server running on port 50051
 ```
@@ -295,7 +295,7 @@ const app = createApp({ adapter: { type: 'node-http' } });
 ```markdown
 ## Performance
 
-BlitzAPI automatically uses the fastest HTTP server available:
+RamAPI automatically uses the fastest HTTP server available:
 
 - **uWebSockets.js** (~350k req/s) - Used by default if installed
 - **Node.js HTTP** (~124k req/s) - Automatic fallback
@@ -305,12 +305,12 @@ To install uWebSockets:
 npm install uWebSockets.js
 \`\`\`
 
-BlitzAPI will automatically use it for 2-3x performance boost!
+RamAPI will automatically use it for 2-3x performance boost!
 ```
 
 ### Quick Start
 ```typescript
-import { createApp } from 'blitzapi';
+import { createApp } from 'ramapi';
 
 // That's it! Automatically uses fastest adapter
 const app = createApp();
@@ -360,4 +360,4 @@ This strategy gives users:
 
 **Next Step:** Implement Phase 3.4.1 - Smart Adapter Selection
 
-This is the key differentiator that makes BlitzAPI the **fastest AND most feature-complete** framework! 🎯
+This is the key differentiator that makes RamAPI the **fastest AND most feature-complete** framework! 🎯
